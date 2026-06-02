@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Tríada del Contenido Efectivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul-oscuro: #001E29;
+  --verde-lima: #C8FF00;
+  --verde-dark: #303D00;
+  --fucsia: #EA4099;
+  --fucsia-dark: #B81469;
+  --blanco: #FFFFFF;
+  --negro: #000000;
+  --negro-soft: #1a1a1a;
+  --metadata: rgba(0,0,0,0.45);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--blanco);
+  color: var(--negro);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 22px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+.slide {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  padding: 80px 100px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Tipografía */
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 72px;
+  line-height: 1.05;
+  color: var(--negro);
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 1.15;
+  color: var(--negro);
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.3;
+  color: var(--negro);
+  margin-bottom: 8px;
+}
+
+p, li {
+  font-size: 22px;
+  line-height: 1.55;
+  color: var(--negro);
+  margin-bottom: 14px;
+}
+
+.metadata {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--metadata);
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.lead {
+  font-size: 26px;
+  line-height: 1.45;
+  color: var(--negro-soft);
+  margin-bottom: 32px;
+  max-width: 1200px;
+}
+
+.subtitle {
+  font-size: 22px;
+  line-height: 1.45;
+  color: var(--negro-soft);
+  margin-bottom: 32px;
+  max-width: 1200px;
+  font-style: italic;
+}
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+.accent { background: var(--verde-lima); color: var(--negro); padding: 2px 12px; }
+.accent-fucsia { color: var(--fucsia-dark); font-weight: 700; }
+
+/* Cards */
+.cards-grid {
+  display: grid;
+  gap: 28px;
+  margin-top: 24px;
+}
+
+.cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.cards-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+.card {
+  background: var(--blanco);
+  border-left: 5px solid var(--verde-lima);
+  padding: 24px 28px;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 0 2px 12px rgba(0,30,41,0.06);
+}
+
+.card.fucsia { border-left-color: var(--fucsia); }
+.card.azul { border-left-color: var(--azul-oscuro); }
+
+.card h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: var(--negro);
+}
+
+.card p { font-size: 19px; line-height: 1.5; margin-bottom: 0; }
+.card p + p { margin-top: 10px; }
+
+/* Lista numerada */
+.numbered-list { list-style: none; margin-top: 20px; }
+.numbered-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 24px;
+  font-size: 21px;
+  line-height: 1.5;
+}
+.numbered-list .num {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 42px;
+  line-height: 1;
+  color: var(--verde-dark);
+}
+.numbered-list .body strong { color: var(--negro); font-size: 22px; display: block; margin-bottom: 4px; }
+
+/* Ejemplo bloque */
+.ejemplo {
+  margin-top: 18px;
+  padding: 16px 20px;
+  background: rgba(200,255,0,0.10);
+  border-left: 3px solid var(--verde-lima);
+  font-size: 19px;
+  line-height: 1.55;
+}
+
+.ejemplo .brand { font-weight: 700; color: var(--fucsia-dark); }
+
+.ejemplo-mal {
+  margin-top: 12px;
+  padding: 12px 18px;
+  background: rgba(234,64,153,0.06);
+  border-left: 3px solid var(--fucsia);
+  font-size: 18px;
+}
+
+.ejemplo-bien {
+  margin-top: 8px;
+  padding: 12px 18px;
+  background: rgba(200,255,0,0.10);
+  border-left: 3px solid var(--verde-lima);
+  font-size: 18px;
+}
+
+.ejemplo-mal::before { content: "Mal: "; font-weight: 700; color: var(--fucsia-dark); }
+.ejemplo-bien::before { content: "Bien: "; font-weight: 700; color: var(--verde-dark); }
+
+/* Hook explanation */
+.explanation {
+  font-size: 23px;
+  line-height: 1.55;
+  color: var(--negro-soft);
+  margin-bottom: 28px;
+  max-width: 1200px;
+  font-weight: 400;
+}
+
+.fases {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fase {
+  padding: 12px 18px;
+  background: rgba(0,30,41,0.04);
+  border-left: 3px solid var(--azul-oscuro);
+  font-size: 19px;
+}
+
+.fase .fase-label { font-weight: 700; color: var(--azul-oscuro); margin-right: 8px; }
+
+/* Sub-sección con bloque */
+.sub-block {
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.sub-block-title {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--azul-oscuro);
+  margin-bottom: 12px;
+}
+
+.formato-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.formato-item {
+  padding: 16px 20px;
+  background: rgba(0,30,41,0.05);
+  border-radius: 6px;
+}
+
+.formato-item strong { display: block; color: var(--azul-oscuro); margin-bottom: 4px; font-size: 18px; }
+.formato-item span { font-size: 17px; color: var(--negro-soft); line-height: 1.4; }
+
+/* Barra de navegación superior */
+.nav-bar {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  border-radius: 999px;
+  box-shadow: 0 2px 14px rgba(0,30,41,0.10);
+  z-index: 100;
+}
+
+.nav-bar button {
+  background: transparent;
+  border: none;
+  padding: 8px 18px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--negro-soft);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nav-bar button:hover {
+  background: rgba(0,30,41,0.08);
+  color: var(--azul-oscuro);
+}
+
+.nav-bar button.active {
+  background: var(--azul-oscuro);
+  color: var(--blanco);
+}
+
+/* Controles inferiores */
+.nav-controls {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+}
+
+.nav-controls button {
+  background: var(--azul-oscuro);
+  color: var(--blanco);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.nav-controls button:hover { background: var(--verde-dark); }
+.nav-controls button:disabled { background: rgba(0,30,41,0.3); cursor: not-allowed; }
+
+.position-indicator {
+  position: fixed;
+  bottom: 36px;
+  left: 32px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--metadata);
+  z-index: 100;
+}
+
+/* Layout específicos */
+.layout-cierre h1 { font-size: 90px; color: var(--negro); }
+.layout-cierre .lead { font-size: 32px; margin-top: 12px; max-width: 1400px; }
+
+/* Responsive básico */
+@media (max-width: 1200px) {
+  h1 { font-size: 56px; }
+  .slide { padding: 60px 60px 80px; }
+  .cards-grid.cols-3, .cards-grid.cols-4, .cards-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
+  .formato-list { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 40px; }
+  p, li { font-size: 18px; }
+  .lead { font-size: 20px; }
+  .cards-grid { grid-template-columns: 1fr !important; }
+  .formato-list { grid-template-columns: 1fr; }
+  .nav-bar button { padding: 6px 12px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <button data-target="1">Inicio</button>
+  <button data-target="3">Hook</button>
+  <button data-target="18">Framework</button>
+  <button data-target="29">CTA</button>
+  <button data-target="34">Cierre</button>
+</nav>
+
+<!-- SLIDE 1: TCE -->
+<section class="slide active" data-section="1">
+  <div class="slide-content">
+    <div class="metadata">Marco general</div>
+    <h1>La <span class="accent">Tríada</span> del Contenido Efectivo</h1>
+    <p class="lead">Marco para construir contenido orgánico o publicitario que activa tres mecanismos psicológicos secuenciales en la audiencia.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Hook</h3>
+        <p>Detener la atención. Compra los primeros segundos.</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Framework narrativo</h3>
+        <p>Sostener la atención. Organiza la psicología del cliente hacia la acción.</p>
+      </div>
+      <div class="card azul">
+        <h3>Call to Action</h3>
+        <p>Producir la acción. Traduce el estado mental en un movimiento concreto.</p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top: 28px;">Marco flexible. No exige los tres elementos simultáneos. Lo importante es que las tres funciones psicológicas se cumplan.</p>
+  </div>
+</section>
+
+<!-- SLIDE 2: Ejemplos -->
+<section class="slide" data-section="1">
+  <div class="slide-content">
+    <div class="metadata">Ejemplos de la presentación</div>
+    <h1>Los ejemplos que usaremos</h1>
+    <p class="lead">Dos casos ficticios — un producto y un servicio — que sirven para ilustrar los conceptos. Cualquier marca puede mapear su propia oferta a la lógica que muestran.</p>
+    <div class="cards-grid cols-2">
+      <div class="card">
+        <h3>PielFresca</h3>
+        <p><strong>Categoría:</strong> sérum de vitamina C de venta directa al consumidor.</p>
+        <p><strong>Audiencia:</strong> mujeres entre 32 y 48 años con manchas o tono irregular.</p>
+        <p><strong>Ticket:</strong> medio ($160.000 por frasco).</p>
+        <p><strong>Modelo:</strong> producto físico.</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Atlas Leadership</h3>
+        <p><strong>Categoría:</strong> programa de formación cohort-based para directivos (12 semanas, online).</p>
+        <p><strong>Audiencia:</strong> directivos que lideran equipos de 8 a 25 personas.</p>
+        <p><strong>Ticket:</strong> alto ($5 millones).</p>
+        <p><strong>Modelo:</strong> servicio digital.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: Hook qué es -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Elemento 1 — Hook</div>
+    <h1>Hook</h1>
+    <p class="lead">Primera unidad de mensaje. Su única función es comprar los siguientes segundos de atención. No vende. Abre la puerta al resto del contenido.</p>
+  </div>
+</section>
+
+<!-- SLIDE 4: Modelo de dos capas -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Estructura</div>
+    <h1>Modelo de dos capas</h1>
+    <p class="lead">El hook tiene dos capas que no deben confundirse: dónde vive (formato) y qué tipo de estímulo activa (modalidad sensorial).</p>
+
+    <div class="sub-block">
+      <div class="sub-block-title">Capa 1 — Dónde vive según el formato</div>
+      <div class="formato-list">
+        <div class="formato-item"><strong>Video</strong><span>Los primeros 3 segundos.</span></div>
+        <div class="formato-item"><strong>Texto</strong><span>El primer párrafo.</span></div>
+        <div class="formato-item"><strong>Imagen</strong><span>El punto focal donde el ojo aterriza primero: texto con mayor jerarquía, rostro central, ícono o flecha que dirige la mirada.</span></div>
+        <div class="formato-item"><strong>Carrusel</strong><span>El punto focal del primer slide (mismas reglas que imagen). Decide si el lector continúa al segundo.</span></div>
+      </div>
+    </div>
+
+    <div class="sub-block">
+      <div class="sub-block-title">Capa 2 — Modalidad sensorial</div>
+      <div class="cards-grid cols-3">
+        <div class="card">
+          <h3>Visual</h3>
+          <p>Estímulo no verbal visual: composición, color, movimiento, contraste, foto, expresión facial. Sin palabras.</p>
+        </div>
+        <div class="card fucsia">
+          <h3>Auditivo</h3>
+          <p>Estímulo no verbal sonoro: música, efecto de sonido, ruido, silencio inesperado. Sin palabras.</p>
+        </div>
+        <div class="card azul">
+          <h3>Narrativo</h3>
+          <p>Palabras en cualquier soporte: frase escrita en pantalla, voz en off, personaje hablando, texto jerárquico en una imagen.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: 4 invariantes -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Fundamentos</div>
+    <h1>Los 4 invariantes</h1>
+    <p class="subtitle">Todo hook viable cumple los cuatro. Cualquiera ausente lo invalida.</p>
+    <ol class="numbered-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <strong>Relevancia del avatar.</strong>
+          El cliente usaría estas palabras al describir su problema.
+          <div class="ejemplo-mal">"Para todos los que quieran mejorar su negocio."</div>
+          <div class="ejemplo-bien">"Para directores comerciales que cierran a feeling y no a sistema."</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <strong>Congruencia con nivel de consciencia.</strong>
+          El arquetipo elegido depende del nivel de consciencia del cliente respecto a su problema.
+          <div class="ejemplo-mal">"Agenda tu sesión estratégica hoy" lanzado a audiencia que ni siquiera sabe que existe la consultoría estratégica.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <strong>Fricción defendible.</strong>
+          Sin fricción no hay stop. Pero defendible con prueba, no clickbait.
+          <div class="ejemplo-mal">"Mejora tu marketing" (sin fricción, nadie discrepa).</div>
+          <div class="ejemplo-bien">"El 70% de las empresas mide mal su pauta digital. Atlas Leadership lo arregla en 12 semanas."</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div class="body">
+          <strong>Match hook ↔ payoff.</strong>
+          Lo que el hook promete, la pieza lo cumple.
+          <div class="ejemplo-mal">"Lo que las marcas de skincare no quieren que sepas" + contenido que no entrega ningún secreto = clickbait detectado y trust destruido.</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- SLIDE 6: Curiosity Gap -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 1</div>
+    <h1>Curiosity Gap</h1>
+    <p class="explanation">Plantea una afirmación específica que omite la pieza clave; el cerebro percibe la información incompleta como deuda cognitiva y se queda hasta encontrar el cierre.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Hay un ingrediente que el 80% de las cremas con vitamina C omiten. Es lo que decide si tu piel mejora o empeora en 30 días."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Hay un error que el 90% de los directivos comete en la primera reunión del lunes. Atlas Leadership lo corrige en 4 sesiones."</div>
+  </div>
+</section>
+
+<!-- SLIDE 7: Pattern Interrupt -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 2</div>
+    <h1>Pattern Interrupt</h1>
+    <p class="explanation">Rompe el patrón esperado del feed con algo inesperado y obliga al cerebro a salir del modo automático y prestar atención activa.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Devolvimos 47 frascos en marzo. Sigue siendo el mejor mes del año."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "El director de RR.HH. dijo 'no funciona' a la primera semana del programa. Renovó el contrato a los 90 días."</div>
+  </div>
+</section>
+
+<!-- SLIDE 8: Pain Agitation -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 3</div>
+    <h1>Pain Agitation</h1>
+    <p class="explanation">Nombra un dolor específico y amplifica su costo real; el cerebro reacciona al miedo de perder con el doble de fuerza que al deseo de ganar.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Cada noche que te acuestas con el corrector puesto, tu piel envejece tres días. Por eso a los 35 ya ves la piel de los 45."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Cada lunes que tu equipo arranca sin foco semanal, pierdes seis horas productivas por persona. Una jornada entera por mes, por colaborador."</div>
+  </div>
+</section>
+
+<!-- SLIDE 9: Contrarian -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 4</div>
+    <h1>Contrarian</h1>
+    <p class="explanation">Contradice una creencia común del nicho con prueba implícita; el cerebro no puede seguir hasta resolver la contradicción que acaba de aparecer.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "La vitamina C no daña la piel. Lo que la daña es la vitamina C oxidada que vende el 70% del mercado."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Tu equipo no necesita más reuniones. Necesita tres menos por semana, pero con la mitad de duración y triple foco."</div>
+  </div>
+</section>
+
+<!-- SLIDE 10: Story -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 5</div>
+    <h1>Story</h1>
+    <p class="explanation">Abre con un momento específico cargado de tensión o revelación; el cerebro procesa la historia como experiencia propia y baja las defensas publicitarias.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Martes 11, 7:43 a.m. Mi mamá me miró al espejo y por primera vez en seis años no me dijo 'pareces cansada'. Esa noche pedí tres frascos más."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Viernes, 4:50 p.m. El director general me llamó: 'el equipo de ventas cerró el trimestre y nadie en la junta levantó la voz.' Era la primera vez en once años."</div>
+  </div>
+</section>
+
+<!-- SLIDE 11: Question -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 6</div>
+    <h1>Question</h1>
+    <p class="explanation">Lanza una pregunta cerrada que solo aplica al avatar específico; el cerebro responde automáticamente y se identifica antes de notar que está frente a un anuncio.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "¿Tienes entre 32 y 48 años y notas que la base del maquillaje ya no te queda como hace tres años?"</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "¿Diriges entre 8 y 25 personas y la reunión del lunes empieza con 'cómo fue la semana' en lugar de 'qué decidimos esta semana'?"</div>
+  </div>
+</section>
+
+<!-- SLIDE 12: Comparison -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 7</div>
+    <h1>Comparison / Before-After</h1>
+    <p class="explanation">Pone dos estados en contraste directo (antes/después o A/B) y revela rápido el resultado; el cerebro evalúa por contraste mucho más rápido que por evaluación absoluta.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Lado izquierdo: 21 días con la crema que usas hoy. Lado derecho: 21 días con PielFresca. Misma persona, misma luz, sin retoque."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Reunión típica de gerencia: dos horas, cinco temas, cero decisiones. Reunión con el método Atlas: 45 minutos, cinco temas, cinco decisiones documentadas."</div>
+  </div>
+</section>
+
+<!-- SLIDE 13: Direct Promise -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 8</div>
+    <h1>Direct Promise</h1>
+    <p class="explanation">Promete un beneficio tangible con condición clara; el cerebro procesa la oferta sin esfuerzo evaluativo y decide más rápido.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Manchas atenuadas visiblemente en 21 días o devolvemos el doble del precio. Sin letra pequeña."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Tu equipo cierra el trimestre con 30% menos reuniones y el mismo o mejor resultado, o reembolso completo."</div>
+  </div>
+</section>
+
+<!-- SLIDE 14: Negative / Anti-hype -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 9</div>
+    <h1>Negative / Anti-hype</h1>
+    <p class="explanation">Admite un defecto o limitación real antes de defender el producto; el cerebro baja la guardia publicitaria porque nadie espera ver algo negativo en un anuncio.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "PielFresca cuesta el doble que cualquier sérum de farmacia. Si tu prioridad es precio, no somos tu marca."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Atlas Leadership no entrega resultados en menos de ocho semanas. Si tu director general necesita ver cambios el viernes, no es el programa adecuado."</div>
+  </div>
+</section>
+
+<!-- SLIDE 15: Aspirational -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Tipo 10</div>
+    <h1>Aspirational / Future Pacing</h1>
+    <p class="explanation">Proyecta al cliente en el estado deseado con detalle concreto; el cerebro visualiza la identidad futura y la quiere antes de razonar si es alcanzable.</p>
+    <div class="ejemplo"><span class="brand">PielFresca:</span> "Lunes 6:40 a.m. Te miras al espejo y, por primera vez en años, decides no usar base. Hace seis meses no sabías cómo ibas a volver a sentirte así."</div>
+    <div class="ejemplo"><span class="brand">Atlas Leadership:</span> "Diciembre, sales del último consejo del año. Por primera vez no te llevas pendientes a la familia. El sistema funciona sin que vivas dentro de él."</div>
+  </div>
+</section>
+
+<!-- SLIDE 16: Modificadores -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Capas transversales</div>
+    <h1>Modificadores principales</h1>
+    <p class="subtitle">Se suman a cualquier arquetipo y multiplican su efecto. Apilar más de 2 o 3 cancela el resultado.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Especificidad</h3>
+        <p>Número no redondeado, plazo concreto o nombre real.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Manchas atenuadas en 21 días" vs "Manchas atenuadas rápido".</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Prueba social</h3>
+        <p>Número específico de clientes o grupo identificable.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "412 directivos en 11 países" vs "Miles de líderes en el mundo".</p>
+      </div>
+      <div class="card azul">
+        <h3>Autoridad</h3>
+        <p>Credencial concreta + resultado verificable.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Formulado por la Dra. Beatriz Acuña, 18 años en dermatología cosmética" vs "Formulado por expertos".</p>
+      </div>
+      <div class="card">
+        <h3>Escasez / Urgencia</h3>
+        <p>Disponibilidad limitada o deadline real, verificable.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Cohort de junio: quedan 6 cupos. Cierra el viernes 27" vs "Inscripciones por tiempo limitado".</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Avatar nombrado</h3>
+        <p>Llamar al cliente con precisión específica.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Si tienes manchas postparto que llevan 18 meses sin desaparecer" vs "Para mujeres que quieren cuidar su piel".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 17: Errores del Hook -->
+<section class="slide" data-section="2">
+  <div class="slide-content">
+    <div class="metadata">Hook · Riesgos</div>
+    <h1>Cinco errores que matan un hook</h1>
+    <ol class="numbered-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <strong>Vaguedad.</strong> Genérico = invisible. Sin números, plazos ni nombres concretos, el hook se filtra como ruido.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Mejora el liderazgo de tu equipo".</div>
+          <div class="ejemplo-bien">"Cierra el trimestre con 30% menos reuniones y el mismo resultado".</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <strong>Mismatch con awareness.</strong> Usar un arquetipo para un nivel de consciencia equivocado.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Compra el sérum vitamina C estabilizada" lanzado a mujeres que aún no saben que las manchas postparto se pueden atenuar.</div>
+          <div class="ejemplo-bien">"Hay un detalle que el 80% de las marcas omite en la vitamina C — y decide si tu piel mejora o empeora".</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <strong>Mismatch hook ↔ landing.</strong> El hook promete A, lo que sigue entrega B. El bounce explota.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> Hook "Cierra el trimestre con 30% menos reuniones". Landing: catálogo genérico de cursos de management.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div class="body">
+          <strong>Stacking de modificadores.</strong> Apilar cuatro o más cancela el efecto. El cerebro elige uno.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "412 mujeres compraron en marzo. Quedan 8 frascos. 50% off por 24 horas. Formulado por la Dra. Acuña. Garantía 90 días".</div>
+          <div class="ejemplo-bien">Elegir uno o dos modificadores.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">5</div>
+        <div class="body">
+          <strong>Clickbait sin payoff.</strong> Promesa que la pieza no cumple. Destruye trust de forma acumulativa.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "El secreto que los CEOs no quieren que sepas" + contenido que no entrega ningún secreto.</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- SLIDE 18: Framework qué es + 3 familias -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Elemento 2 — Framework narrativo</div>
+    <h1>Framework narrativo</h1>
+    <p class="lead">Estructura del mensaje entre el hook y el CTA. Su función es sostener la atención durante el cuerpo del contenido organizando la psicología del cliente hacia la acción. No es un molde rígido, es una secuencia psicológica.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Dolor → alivio</h3>
+        <p>Nombra el dolor del cliente, lo amplifica, presenta la solución como alivio.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><strong>Frameworks:</strong> PAS, PASTOR.</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Transformación → aspiración</h3>
+        <p>Pinta el estado deseado con detalle y conduce al cliente desde su realidad actual al estado aspiracional.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><strong>Frameworks:</strong> BAB, BDA, StoryBrand SB7, HSO.</p>
+      </div>
+      <div class="card azul">
+        <h3>Deseo → escalera lógica</h3>
+        <p>Mueve al cliente por una secuencia jerárquica de atención, interés, deseo y acción.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><strong>Frameworks:</strong> AIDA, 4Ps.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 19: Fundamentos -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Fundamentos</div>
+    <h1>Fundamentos del framework</h1>
+    <p class="subtitle">Cuatro cosas que se identifican y resuelven antes de elegir cualquier framework. Sin estos cuatro, ningún framework rinde.</p>
+    <div class="cards-grid cols-2">
+      <div class="card">
+        <h3>Big Idea anclada</h3>
+        <p>Una sola idea central, contraintuitiva o nueva, que el copy desarrolla sin desviarse. Es el ángulo conceptual que reposiciona el problema.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "El primer sérum que estabiliza la vitamina C en cápsulas de fosfatidilcolina" — redefine la categoría, no es solo otro sérum más.</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Mecanismo único legible</h3>
+        <p>Explicación específica de por qué esta solución funciona donde otras fallaron. Tiene nombre, tiene pasos, tiene lógica defendible.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Método de las 3 conversaciones: lunes para decidir, miércoles para resolver, viernes para revisar".</p>
+      </div>
+      <div class="card azul">
+        <h3>Voz del cliente (VoC)</h3>
+        <p>El copy usa las palabras literales del cliente para describir su dolor y sus deseos. El framework es el esqueleto; la VoC es la carne.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Llevo cuatro años tapando manchas con corrector" — frase literal del cliente, no "tratamiento despigmentante avanzado".</p>
+      </div>
+      <div class="card">
+        <h3>Sofisticación de mercado</h3>
+        <p>Qué tan saturado está el mercado de promesas similares. Etapa 1: promesa directa basta. Etapa 5: nadie cree promesas, hay que cambiar el ángulo.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> el liderazgo es categoría en etapa 4-5 (8.000 cursos compitiendo). Atlas necesita un mecanismo único; "mejora tu liderazgo" ya no funciona.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 20: PAS -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Dolor → Alivio</div>
+    <h1>PAS <span style="font-size:32px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Problem · Agitate · Solution</span></h1>
+    <p class="explanation">Nombra el dolor en palabras del cliente, amplifica el costo de no actuar y presenta el producto como alivio directo. La pérdida pesa el doble que la ganancia equivalente.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">PielFresca</p>
+      <div class="fase"><span class="fase-label">Problem:</span>"Llevas dos años intentando bajar la mancha del pómulo con tres cremas distintas y sigue ahí."</div>
+      <div class="fase"><span class="fase-label">Agitate:</span>"Cada noche que la tapas con corrector, el corrector mismo seca tu piel y la marca se vuelve más resistente."</div>
+      <div class="fase"><span class="fase-label">Solution:</span>"PielFresca usa vitamina C estabilizada que penetra tres veces más profundo. Resultado visible en 21 días o devolvemos el doble del precio."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 21: PASTOR -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Dolor → Alivio</div>
+    <h1>PASTOR <span style="font-size:26px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Person · Amplify · Story · Transformation · Offer · Response</span></h1>
+    <p class="explanation">Construye la narrativa completa desde la persona y su dolor hasta la oferta y la respuesta, combinando amplificación, historia y prueba. Mueve a quien tiene dolor reconocido pero aún no siente urgencia.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:20px 24px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:10px;">Atlas Leadership</p>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Person:</span>"Si diriges entre 8 y 25 personas y la reunión del lunes se gasta en hablar de la semana en lugar de decidir esta semana..."</div>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Amplify:</span>"...cada mes pierdes 24 horas productivas por colaborador en mal entendidos."</div>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Story:</span>"En 2022 una directora financiera entró al consejo el viernes con notas de tres reuniones solapadas. Hizo el programa. Tres meses después entró con un solo documento de una página."</div>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Transformation:</span>"412 directivos cerraron sus trimestres con 30% menos reuniones y los mismos o mejores resultados."</div>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Offer:</span>"12 semanas, cohort de junio, USD $2.500. Sesiones grupales, plantillas del método y comunidad."</div>
+      <div class="fase" style="font-size:17px;"><span class="fase-label">Response:</span>"Aplica antes del viernes 27. 30 cupos por cohort."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 22: BAB -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Transformación → Aspiración</div>
+    <h1>BAB <span style="font-size:32px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Before · After · Bridge</span></h1>
+    <p class="explanation">Muestra el estado actual del cliente con detalle, pinta la realidad ideal igualmente concreta y posiciona el producto como puente. La brecha visible crea tensión que pide resolución.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">PielFresca</p>
+      <div class="fase"><span class="fase-label">Before:</span>"Hoy: 25 minutos cada mañana frente al espejo decidiendo qué capas de corrector tapan las manchas sin que se note el corrector."</div>
+      <div class="fase"><span class="fase-label">After:</span>"21 días: tres minutos de rutina. Las manchas atenuadas, la piel pareja, ningún corrector."</div>
+      <div class="fase"><span class="fase-label">Bridge:</span>"PielFresca: vitamina C estabilizada en cápsulas de fosfatidilcolina, dos aplicaciones diarias."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 23: BDA -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Transformación → Aspiración</div>
+    <h1>BDA <span style="font-size:32px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Before · During · After</span></h1>
+    <p class="explanation">Variante visual de BAB para video. Muestra el problema, el producto en uso con el mecanismo visible, y el resultado tangible. Ver el mecanismo en acción reduce el escepticismo más que cualquier claim.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">PielFresca</p>
+      <div class="fase"><span class="fase-label">Before (3 s):</span>rostro en cámara con manchas visibles bajo luz natural.</div>
+      <div class="fase"><span class="fase-label">During (15 s):</span>aplicación del sérum en cuatro pasos. Voz en off explica la cápsula de fosfatidilcolina.</div>
+      <div class="fase"><span class="fase-label">After (10 s):</span>mismo rostro 21 días después, sin retoque, manchas atenuadas. CTA: descuento de primera compra hasta el viernes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 24: StoryBrand SB7 -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Transformación → Aspiración</div>
+    <h1>StoryBrand SB7</h1>
+    <p class="explanation">El cliente es el héroe y el producto es el guía con un plan que lo ayuda a evitar el fracaso y a llegar al éxito. La marca se posiciona como mentor, no como protagonista.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:20px 24px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:10px;">Atlas Leadership</p>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Héroe:</span>director que lidera entre 8 y 25 personas.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Problema:</span>las reuniones consumen el tiempo del equipo sin producir decisiones.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Guía:</span>Atlas Leadership lleva 11 años aplicando el método de las 3 conversaciones.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Plan:</span>12 semanas de cohort + plantillas + comunidad.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Acción:</span>aplica antes del viernes 27.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Fracaso evitado:</span>seguir perdiendo seis horas semanales por persona.</div>
+      <div class="fase" style="font-size:18px;"><span class="fase-label">Éxito:</span>cerrar el trimestre con 30% menos reuniones y mejores resultados.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 25: HSO -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Transformación → Aspiración</div>
+    <h1>HSO <span style="font-size:32px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Hook · Story · Offer</span></h1>
+    <p class="explanation">Capta atención con un hook, cuenta una historia que rompe una creencia falsa y presenta el producto como la conclusión natural de esa historia. Sin cambio de creencia no hay compra.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">Atlas Leadership</p>
+      <div class="fase"><span class="fase-label">Hook:</span>"El 78% de los directivos cree que el problema es que su equipo trabaja poco. Es exactamente al revés."</div>
+      <div class="fase"><span class="fase-label">Story:</span>"Una directora financiera estaba convencida de que su equipo necesitaba más reuniones. Hicimos el ejercicio: redujimos a la mitad. La productividad subió 22% en seis semanas."</div>
+      <div class="fase"><span class="fase-label">Offer:</span>"Atlas Leadership entrena directivos para invertir esa creencia y rediseñar el calendario del equipo en 12 semanas. Cohort de junio, USD $2.500."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 26: AIDA -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Deseo → Escalera Lógica</div>
+    <h1>AIDA <span style="font-size:30px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Attention · Interest · Desire · Action</span></h1>
+    <p class="explanation">Captura atención, despierta interés con información que sostiene, construye deseo con beneficios y prueba, y termina con la acción. La fórmula clásica del modelo jerárquico de respuesta directa.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">PielFresca</p>
+      <div class="fase"><span class="fase-label">Attention:</span>"Hay un detalle que el 80% de las marcas omite en la vitamina C."</div>
+      <div class="fase"><span class="fase-label">Interest:</span>"Sin estabilización, la vitamina C se oxida en 30 días y deja de funcionar. Por eso pagaste tres veces por algo que no rindió."</div>
+      <div class="fase"><span class="fase-label">Desire:</span>"PielFresca usa cápsulas de fosfatidilcolina que mantienen la vitamina C activa los 90 días del envase. Manchas atenuadas en 21 días."</div>
+      <div class="fase"><span class="fase-label">Action:</span>"Compra ahora. Garantía: si no ves cambio en 21 días, devolvemos el doble."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 27: 4Ps -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Deseo → Escalera Lógica</div>
+    <h1>4Ps <span style="font-size:30px;color:var(--negro-soft);font-weight:400;font-family:'Open Sans',sans-serif;">· Picture · Promise · Prove · Push</span></h1>
+    <p class="explanation">Activa la imaginación con una escena vívida, promete cómo el producto cumple esa escena, prueba con datos y casos, y empuja con un CTA que reduce la fricción del siguiente paso.</p>
+    <div style="background:rgba(0,30,41,0.04);padding:24px 28px;border-radius:8px;border-left:4px solid var(--azul-oscuro);">
+      <p style="font-weight:700;color:var(--fucsia-dark);margin-bottom:12px;">Atlas Leadership</p>
+      <div class="fase"><span class="fase-label">Picture:</span>"Diciembre, sales del último consejo del año. Por primera vez no llevas pendientes a tu familia. Tu equipo cerró el trimestre y la junta no levantó una sola voz."</div>
+      <div class="fase"><span class="fase-label">Promise:</span>"Atlas Leadership entrena directivos en el método de las 3 conversaciones. Trimestres que cierran con 30% menos reuniones y mejores resultados."</div>
+      <div class="fase"><span class="fase-label">Prove:</span>"412 directivos en 11 países. Caso documentado: directora financiera que pasó de 14 reuniones semanales a 6, sin perder un solo deadline."</div>
+      <div class="fase"><span class="fase-label">Push:</span>"Cohort de junio, 30 cupos, USD $2.500. Aplica antes del viernes 27."</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 28: Errores del Framework -->
+<section class="slide" data-section="3">
+  <div class="slide-content">
+    <div class="metadata">Framework · Riesgos</div>
+    <h1>Cinco errores que matan un framework</h1>
+    <ol class="numbered-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <strong>Saltar fases del framework.</strong> Cada fase cumple una función psicológica específica. Saltarla rompe la secuencia.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> PAS sin Agitate: "Tus reuniones son malas. Solución: Atlas". Sin amplificar el costo, el cliente no siente urgencia.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <strong>Framework fuera de su rango de duración.</strong> Cada framework tiene un rango donde funciona.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> PASTOR completo (6 elementos, 1.500 palabras) en una Story de Instagram de 15 segundos.</div>
+          <div class="ejemplo-bien">BDA visual para Story; PASTOR vive en landing larga o email de lanzamiento.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <strong>Sobre-investir en el hook, cuerpo flojo.</strong> La pieza arranca fuerte y se desinfla. "Morir en el cuarto minuto".
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> hook "Hay un error que el 90% de los directivos comete..." + cuerpo genérico sobre "mejorar liderazgo" sin entregar el error específico.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div class="body">
+          <strong>Acumular la prueba al final.</strong> La prueba va donde aparece cada claim grande, no toda junta al cierre.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> 600 palabras de claims + 200 palabras de testimonios al final.</div>
+          <div class="ejemplo-bien">"412 mujeres reportan manchas atenuadas en 21 días" justo después del claim de manchas.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">5</div>
+        <div class="body">
+          <strong>Cambiar el framework entre piezas de la misma campaña.</strong> El cliente llegó al landing con la promesa del ad. Si cambia, el bounce sube.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> ad con HSO emocional + landing con FAB (lista de features).</div>
+          <div class="ejemplo-bien">Ad con HSO + landing que extiende la misma historia, mismo personaje, mismo CTA.</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- SLIDE 29: CTA qué es -->
+<section class="slide" data-section="4">
+  <div class="slide-content">
+    <div class="metadata">Elemento 3 — Call to Action</div>
+    <h1>Call to Action</h1>
+    <p class="lead">Cierre del contenido. Su función es producir la acción del cliente traduciendo el estado mental construido por el hook y el framework en un movimiento concreto: clic, compra, suscripción, agenda, respuesta.</p>
+  </div>
+</section>
+
+<!-- SLIDE 30: 3 tipos CTA -->
+<section class="slide" data-section="4">
+  <div class="slide-content">
+    <div class="metadata">CTA · Tipología</div>
+    <h1>Tres tipos de CTA</h1>
+    <p class="subtitle">Según la temperatura del tráfico y el nivel de consciencia del cliente.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Directo</h3>
+        <p>Pide la conversión final. Funciona cuando el cliente ya está listo para decidir.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Compra tu sérum. Envío gratis en 24 horas. Garantía de 21 días o devolvemos el doble."</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Transicional</h3>
+        <p>Pide un compromiso menor que mueve al cliente un nivel sin pedir la conversión. Funciona cuando aún no está listo para comprar.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Recibe el diagnóstico de las 7 reuniones que tu equipo puede eliminar esta semana. Sin agendar nada."</p>
+      </div>
+      <div class="card azul">
+        <h3>Auto-calificatorio</h3>
+        <p>Filtra al cliente no apto antes de pedir la acción. Funciona en B2B high-ticket o ofertas premium.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Si diriges entre 8 y 25 personas y tu trimestre cierra con más de 6 reuniones semanales por persona, aplica al diagnóstico de 30 minutos."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 31: 3 palancas CTA -->
+<section class="slide" data-section="4">
+  <div class="slide-content">
+    <div class="metadata">CTA · Palancas</div>
+    <h1>Tres palancas del CTA efectivo</h1>
+    <p class="subtitle">Variables que se ajustan para que el CTA convierta. Las tres tienen que estar activas.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Especificidad</h3>
+        <p>El CTA específico baja la ansiedad del cliente: qué pasa al hacer clic, qué obtiene, en qué tiempo, quién atiende.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Agenda llamada de 15 minutos con la dermatóloga del equipo el jueves a las 4 p.m." vs "Contáctanos".</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Reducción de fricción</h3>
+        <p>Bajar el costo percibido en tiempo, datos requeridos o riesgo financiero.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Diagnóstico de 30 minutos. Te respondemos en 24 horas. Sin contrato, sin compromiso" vs "Agenda asesoría estratégica".</p>
+      </div>
+      <div class="card azul">
+        <h3>Claridad de diseño</h3>
+        <p>Verbo de acción legible, botón visualmente dominante, eliminación de elementos competitivos cerca del CTA.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> botón "Quiero el sérum" en color contrastante, único CTA primario en la página, sin animaciones ni links que compitan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 32: Componentes adyacentes -->
+<section class="slide" data-section="4">
+  <div class="slide-content">
+    <div class="metadata">CTA · Refuerzos</div>
+    <h1>Componentes adyacentes al CTA</h1>
+    <p class="subtitle">Elementos que viven cerca del CTA y refuerzan la decisión.</p>
+    <div class="cards-grid cols-3">
+      <div class="card">
+        <h3>Garantías</h3>
+        <p>Reducen el riesgo financiero percibido: money-back, prueba gratuita, "paga después de ver resultado".</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "Si en 21 días no ves cambio en tus manchas, devolvemos el doble del precio. Sin letra pequeña."</p>
+      </div>
+      <div class="card fucsia">
+        <h3>Escasez verificable</h3>
+        <p>Produce urgencia. Solo funciona si es real y comprobable: cantidad, deadline, cohort, bonus expirante.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Cohort de junio: 30 cupos, abre 4 veces al año. Inscripción cierra viernes 27 a las 11:59 p.m. UTC-5."</p>
+      </div>
+      <div class="card azul">
+        <h3>Social proof posicionado</h3>
+        <p>Testimonios y casos específicos junto al CTA, no genéricos. El más cerca del botón debe ser el más fuerte.</p>
+        <p style="font-size:17px;color:var(--negro-soft);margin-top:8px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> "1.247 mujeres entre 32-48 años reportaron manchas atenuadas en 21 días. Caso: María Beatriz, 38 años, video adjunto."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 33: Errores CTA -->
+<section class="slide" data-section="4">
+  <div class="slide-content">
+    <div class="metadata">CTA · Riesgos</div>
+    <h1>Cinco errores que matan un CTA</h1>
+    <ol class="numbered-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <strong>Verbo vago.</strong> "Saber más", "Conoce", "Más información". Indica baja confianza del oferente.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Conoce nuestro programa".</div>
+          <div class="ejemplo-bien">"Aplica al diagnóstico de 30 minutos antes del viernes."</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <strong>Múltiples CTA compitiendo.</strong> Varios botones del mismo peso visual en la misma pantalla. El cliente pospone la decisión.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> above-the-fold con "Comprar sérum" + "Probar muestra" + "Suscribirse" como botones grandes equivalentes.</div>
+          <div class="ejemplo-bien">Un único CTA primario; los demás como links de texto subordinados.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <strong>CTA mal alineado con awareness.</strong> Pedir conversión final a quien ni sabe que tiene el problema, o compromiso menor a quien ya está listo para comprar.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> "Aplica al programa de USD $2.500 ahora" lanzado a directivos en LinkedIn sin contexto previo.</div>
+          <div class="ejemplo-bien">"Recibe el diagnóstico gratuito" — CTA transicional que mueve un nivel.</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">4</div>
+        <div class="body">
+          <strong>Formulario sobrecargado.</strong> Cada campo adicional pierde porcentaje de completitud.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> formulario de descarga de guía con 12 campos.</div>
+          <div class="ejemplo-bien">3 campos (nombre, email, rango de edad).</div>
+        </div>
+      </li>
+      <li>
+        <div class="num">5</div>
+        <div class="body">
+          <strong>Escasez fabricada.</strong> "Última oportunidad" que se repite cada semana, countdown que se reinicia. Destruye trust permanentemente.
+          <div class="ejemplo-mal"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> countdown de 24 horas que se reinicia cada vez que el cliente vuelve.</div>
+          <div class="ejemplo-bien">"Cohort cierra viernes 27 a las 11:59 p.m. UTC-5", deadline real y consistente.</div>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- SLIDE 34: Cierre -->
+<section class="slide layout-cierre" data-section="5">
+  <div class="slide-content">
+    <div class="metadata">Cierre</div>
+    <h1>Match <span class="accent">transversal</span> entre los tres elementos</h1>
+    <p class="lead">La coherencia entre hook, framework y CTA mantiene la pieza viva como una sola unidad psicológica. Cuando se rompe, la conversión muere.</p>
+
+    <div style="margin-top: 16px;">
+      <div class="sub-block">
+        <div class="sub-block-title">Hook ↔ Framework</div>
+        <p style="font-size:20px;">El hook promete A, el framework debe cumplir A.</p>
+        <div class="ejemplo-mal" style="font-size:17px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> hook "Hay un error que el 90% de los directivos comete..." + framework que nunca dice cuál es el error. Clickbait detectado.</div>
+      </div>
+
+      <div class="sub-block">
+        <div class="sub-block-title">Framework ↔ CTA</div>
+        <p style="font-size:20px;">La temperatura emocional del CTA coincide con la del framework.</p>
+        <div class="ejemplo-mal" style="font-size:17px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">PielFresca:</span> framework de pain agitation intenso + CTA suave "Conoce más sobre el sérum". Disonancia.</div>
+      </div>
+
+      <div class="sub-block">
+        <div class="sub-block-title">Hook ↔ CTA (indirecto)</div>
+        <p style="font-size:20px;">El CTA cierra el arco emocional iniciado por el hook.</p>
+        <div class="ejemplo-mal" style="font-size:17px;"><span class="brand" style="color:var(--fucsia-dark);font-weight:700;">Atlas Leadership:</span> hook story sobre transformación de una directora + CTA "Suscríbete al newsletter". El arco pide un compromiso más fuerte.</div>
+      </div>
+    </div>
+
+    <p style="font-family:'Playfair Display',serif;font-weight:700;font-size:30px;margin-top:36px;color:var(--negro);">Las tres funciones psicológicas se cumplen juntas o no se cumplen.</p>
+  </div>
+</section>
+
+<div class="position-indicator"><span id="current">1</span> / <span id="total">34</span></div>
+
+<div class="nav-controls">
+  <button id="prev" aria-label="Anterior">←</button>
+  <button id="next" aria-label="Siguiente">→</button>
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const currentEl = document.getElementById('current');
+  const totalEl = document.getElementById('total');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  const navButtons = document.querySelectorAll('.nav-bar button');
+
+  let current = 1;
+  totalEl.textContent = total;
+
+  // Section ranges for nav bar highlighting
+  const sectionRanges = {
+    1: [1, 2],   // Inicio (TCE + Ejemplos)
+    2: [3, 17],  // Hook
+    3: [18, 28], // Framework
+    4: [29, 33], // CTA
+    5: [34, 34]  // Cierre
+  };
+
+  function getSectionOfSlide(slideIndex) {
+    for (const [section, range] of Object.entries(sectionRanges)) {
+      if (slideIndex >= range[0] && slideIndex <= range[1]) {
+        return parseInt(section);
+      }
+    }
+    return 1;
+  }
+
+  function show(index) {
+    if (index < 1 || index > total) return;
+    slides.forEach((s, i) => s.classList.toggle('active', i === index - 1));
+    current = index;
+    currentEl.textContent = index;
+    prevBtn.disabled = (index === 1);
+    nextBtn.disabled = (index === total);
+    updateNavBar();
+  }
+
+  function updateNavBar() {
+    const section = getSectionOfSlide(current);
+    navButtons.forEach(btn => {
+      const target = parseInt(btn.dataset.target);
+      const targetSection = getSectionOfSlide(target);
+      btn.classList.toggle('active', targetSection === section);
+    });
+  }
+
+  prevBtn.addEventListener('click', () => show(current - 1));
+  nextBtn.addEventListener('click', () => show(current + 1));
+
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = parseInt(btn.dataset.target);
+      show(target);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      show(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      show(current - 1);
+    } else if (e.key === 'Home') {
+      show(1);
+    } else if (e.key === 'End') {
+      show(total);
+    }
+  });
+
+  show(1);
+})();
+</script>
+</body>
+</html>
