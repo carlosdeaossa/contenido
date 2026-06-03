@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico del ecosistema digital — Decorcerámica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* PALETA RESTRINGIDA
+     #001E29 azul oscuro · #C8FF00 verde limón · #EA4099 fucsia · #FFFFFF blanco · #000000 negro
+     Gris solo permitido como negro con opacidad para metadata muy secundaria.
+  */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Open Sans', system-ui, sans-serif;
+    background: #001E29;
+    color: #000000;
+    -webkit-font-smoothing: antialiased;
+  }
+  .presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px 90px 80px;
+    background: #FFFFFF;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.active { display: flex; }
+  h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 700; }
+
+  .slide-num {
+    position: absolute;
+    top: 36px;
+    right: 80px;
+    font-size: 18px;
+    letter-spacing: 2.5px;
+    color: #000000;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.45;
+  }
+  .slide-tag {
+    position: absolute;
+    top: 36px;
+    left: 80px;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: #000000;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+  .slide-tag::before {
+    content: "";
+    display: inline-block;
+    width: 32px;
+    height: 3px;
+    background: #C8FF00;
+    margin-right: 14px;
+    vertical-align: middle;
+  }
+  .slide-title {
+    font-size: 70px;
+    line-height: 1.1;
+    color: #000000;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    max-width: 1280px;
+  }
+  .slide-title em {
+    font-style: italic;
+    color: #000000;
+    font-weight: 800;
+  }
+  .slide-title .accent {
+    background: #C8FF00;
+    padding: 2px 12px;
+    font-style: normal;
+    color: #000000;
+  }
+
+  /* PORTADA */
+  .slide-portada {
+    background: #001E29;
+    color: #FFFFFF;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 100px 120px;
+  }
+  .slide-portada .eyebrow {
+    font-size: 22px;
+    letter-spacing: 5px;
+    color: #C8FF00;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-weight: 800;
+  }
+  .slide-portada h1 {
+    font-size: 139px;
+    line-height: 1.02;
+    color: #FFFFFF;
+    margin-bottom: 40px;
+    max-width: 1400px;
+  }
+  .slide-portada h1 .lime { color: #C8FF00; }
+  .slide-portada .sub {
+    font-size: 41px;
+    color: #FFFFFF;
+    opacity: 0.85;
+    margin-bottom: 70px;
+    font-weight: 300;
+  }
+  .slide-portada .meta {
+    display: flex;
+    gap: 80px;
+    margin-top: 90px;
+    font-size: 19px;
+    letter-spacing: 2px;
+  }
+  .slide-portada .meta strong {
+    color: #C8FF00;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 17px;
+  }
+  .slide-portada .meta span { color: #FFFFFF; font-weight: 400; font-size: 22px; }
+
+  /* BLOQUES DE CONTENIDO */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 44px;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .chart-box {
+    background: #FFFFFF;
+    border: 2px solid #001E29;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .chart-box h4 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #000000;
+    margin-bottom: 18px;
+    font-weight: 800;
+  }
+  .chart-svg {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+  }
+  .bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 4px;
+  }
+  .bullet {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(0, 30, 41, 0.15);
+  }
+  .bullet:last-child { border-bottom: none; }
+  .bullet .marker {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    background: #C8FF00;
+    color: #000000;
+    font-weight: 900;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+  .bullet p {
+    font-size: 24px;
+    line-height: 1.45;
+    color: #000000;
+  }
+  .bullet p strong {
+    color: #000000;
+    font-weight: 800;
+  }
+  .bullet p .neg { color: #EA4099; font-weight: 800; }
+
+  /* TABLA */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 20px;
+    margin-top: 14px;
+  }
+  .data-table th, .data-table td {
+    padding: 13px 10px;
+    text-align: right;
+    border-bottom: 1px solid rgba(0, 30, 41, 0.15);
+  }
+  .data-table th {
+    background: #001E29;
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  .data-table td:first-child, .data-table th:first-child {
+    text-align: left;
+    font-weight: 800;
+  }
+  .data-table tr.highlight td {
+    background: rgba(200, 255, 0, 0.22);
+    font-weight: 800;
+    color: #000000;
+  }
+
+  /* NÚMEROS DESTACADOS */
+  .big-stat {
+    background: #001E29;
+    color: #FFFFFF;
+    padding: 36px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .big-stat .label {
+    font-size: 17px;
+    letter-spacing: 2.5px;
+    color: #C8FF00;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .big-stat .value {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 115px;
+    line-height: 1;
+    color: #FFFFFF;
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+  .big-stat .value .small { font-size: 58px; color: #FFFFFF; opacity: 0.75; }
+  .big-stat .desc {
+    font-size: 20px;
+    color: #FFFFFF;
+    line-height: 1.45;
+    opacity: 0.92;
+  }
+  .big-stat.crit {
+    background: #EA4099;
+  }
+  .big-stat.crit .label { color: #FFFFFF; }
+
+  /* CAUSA RAÍZ */
+  .causa-title {
+    font-size: 110px;
+    line-height: 1;
+    color: #000000;
+    margin-top: 30px;
+    margin-bottom: 28px;
+    max-width: 1300px;
+  }
+  .causa-title .accent {
+    background: #EA4099;
+    padding: 4px 16px;
+    color: #FFFFFF;
+  }
+  .causa-sub {
+    font-size: 26px;
+    color: #000000;
+    margin-bottom: 36px;
+    max-width: 1200px;
+    line-height: 1.45;
+  }
+  .causa-sub strong { font-weight: 800; }
+  .frentes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    flex: 1;
+    min-height: 0;
+  }
+  .frente {
+    background: #FFFFFF;
+    border: 2px solid #001E29;
+    border-top: 6px solid #C8FF00;
+    padding: 26px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .frente h3 {
+    font-size: 36px;
+    color: #000000;
+    margin-bottom: 8px;
+  }
+  .frente .conecta {
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #EA4099;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .frente p {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #000000;
+  }
+  .ia-footnote {
+    background: #001E29;
+    color: #FFFFFF;
+    padding: 24px 30px;
+    margin-top: 22px;
+    font-size: 22px;
+    line-height: 1.5;
+    border-left: 6px solid #C8FF00;
+  }
+  .ia-footnote strong { color: #C8FF00; font-weight: 800; }
+
+  /* PLAN */
+  .ejes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+    flex: 1;
+    min-height: 0;
+    margin-top: 12px;
+  }
+  .eje {
+    background: #FFFFFF;
+    border: 2px solid #001E29;
+    padding: 28px 30px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .eje-num {
+    position: absolute;
+    top: -18px;
+    left: 24px;
+    background: #C8FF00;
+    color: #000000;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 31px;
+    padding: 4px 18px;
+    letter-spacing: 1px;
+  }
+  .eje h3 {
+    font-size: 34px;
+    color: #000000;
+    margin-top: 12px;
+    margin-bottom: 8px;
+  }
+  .eje .horizonte {
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #EA4099;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .eje p {
+    font-size: 20px;
+    line-height: 1.5;
+    color: #000000;
+    margin-bottom: 16px;
+  }
+  .eje .conecta {
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: #001E29;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid rgba(0, 30, 41, 0.15);
+  }
+
+  /* SÍNTESIS */
+  .sintesis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+  .sintesis-narrativa {
+    background: #FFFFFF;
+    border: 2px solid #001E29;
+    border-left: 6px solid #C8FF00;
+    padding: 30px 36px;
+    font-size: 26px;
+    line-height: 1.55;
+    color: #000000;
+    flex: 1;
+  }
+  .sintesis-narrativa strong { color: #EA4099; font-weight: 800; }
+
+  /* CONTROLES */
+  .controls {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: #001E29;
+    padding: 12px 24px;
+    border: 2px solid #C8FF00;
+    z-index: 100;
+  }
+  .controls button {
+    background: transparent;
+    border: none;
+    color: #C8FF00;
+    font-size: 26px;
+    cursor: pointer;
+    padding: 4px 14px;
+    font-weight: 800;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .controls button:hover { color: #FFFFFF; }
+  .controls .indicator {
+    color: #FFFFFF;
+    font-size: 17px;
+    letter-spacing: 2.5px;
+    font-weight: 800;
+    min-width: 62px;
+    text-align: center;
+  }
+
+  /* LEYENDA */
+  .legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 14px;
+    font-size: 16px;
+    color: #000000;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+    font-weight: 700;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+  }
+  .legend-line {
+    width: 22px;
+    height: 3px;
+  }
+
+  .firma {
+    position: absolute;
+    bottom: 30px;
+    right: 80px;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: #000000;
+    opacity: 0.45;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+<div class="presentation">
+
+<!-- SLIDE 1 — PORTADA -->
+<section class="slide slide-portada active">
+  <div class="eyebrow">delaossa.co · marketing digital + ia aplicada</div>
+  <h1>Diagnóstico del<br>ecosistema <span class="lime">digital</span>.</h1>
+  <div class="sub">Decorcerámica · Análisis del comportamiento 2024–2026</div>
+  <div class="meta">
+    <div>
+      <strong>Período</strong>
+      <span>Enero 2024 — Mayo 2026</span>
+    </div>
+    <div>
+      <strong>Fuentes</strong>
+      <span>GA4 · Google Ads · Meta Ads</span>
+    </div>
+    <div>
+      <strong>Fecha</strong>
+      <span>Mayo 2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2 — HALLAZGO CABECERA -->
+<section class="slide">
+  <div class="slide-tag">Hallazgo cabecera</div>
+  <div class="slide-num">02 / 10</div>
+  <h2 class="slide-title">El volumen <em>no cayó</em>. La composición se <span class="accent">invirtió</span>.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Sesiones por grupo de intención · trimestral</h4>
+      <svg class="chart-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+        <line x1="70" y1="350" x2="780" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="70" y1="20" x2="70" y2="350" stroke="#001E29" stroke-width="2"/>
+        <text x="60" y="354" text-anchor="end" font-size="16" font-weight="700" fill="#000000">0</text>
+        <text x="60" y="284" text-anchor="end" font-size="16" font-weight="700" fill="#000000">250k</text>
+        <text x="60" y="214" text-anchor="end" font-size="16" font-weight="700" fill="#000000">500k</text>
+        <text x="60" y="144" text-anchor="end" font-size="16" font-weight="700" fill="#000000">750k</text>
+        <text x="60" y="74" text-anchor="end" font-size="16" font-weight="700" fill="#000000">1000k</text>
+        <line x1="70" y1="284" x2="780" y2="284" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="214" x2="780" y2="214" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="144" x2="780" y2="144" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="74" x2="780" y2="74" stroke="#000000" stroke-width="1" opacity="0.1"/>
+
+        <!-- ALTA INTENCIÓN — azul oscuro -->
+        <path d="M 110 236.4 L 183 203 L 257 229 L 331 245.3 L 405 242.8 L 478 259.3 L 552 253.4 L 626 259.8 L 700 280.8 L 773 308 L 773 350 L 110 350 Z"
+              fill="#001E29"/>
+
+        <!-- BAJA INTENCIÓN — fucsia -->
+        <path d="M 110 189.6 L 183 157.1 L 257 142 L 331 198.5 L 405 136.4 L 478 194.9 L 552 217 L 626 222.9 L 700 173.3 L 773 219.8
+                 L 773 308 L 700 280.8 L 626 259.8 L 552 253.4 L 478 259.3 L 405 242.8 L 331 245.3 L 257 229 L 183 203 L 110 236.4 Z"
+              fill="#EA4099"/>
+
+        <!-- SOCIAL — verde lima -->
+        <path d="M 110 149.3 L 183 102.5 L 257 99.7 L 331 165.7 L 405 92.9 L 478 156.2 L 552 176.1 L 626 176.7 L 700 89.3 L 773 151.6
+                 L 773 219.8 L 700 173.3 L 626 222.9 L 552 217 L 478 194.9 L 405 136.4 L 331 198.5 L 257 142 L 183 157.1 L 110 189.6 Z"
+              fill="#C8FF00"/>
+
+        <!-- Total line -->
+        <polyline points="110,143.4 183,99 257,95.5 331,161 405,88.9 478,151.6 552,170.8 626,171.6 700,78.4 773,146.4"
+                  fill="none" stroke="#000000" stroke-width="3"/>
+        <circle cx="110" cy="143.4" r="4" fill="#000000"/>
+        <circle cx="183" cy="99" r="4" fill="#000000"/>
+        <circle cx="257" cy="95.5" r="4" fill="#000000"/>
+        <circle cx="331" cy="161" r="4" fill="#000000"/>
+        <circle cx="405" cy="88.9" r="4" fill="#000000"/>
+        <circle cx="478" cy="151.6" r="4" fill="#000000"/>
+        <circle cx="552" cy="170.8" r="4" fill="#000000"/>
+        <circle cx="626" cy="171.6" r="4" fill="#000000"/>
+        <circle cx="700" cy="78.4" r="4" fill="#000000"/>
+        <circle cx="773" cy="146.4" r="4" fill="#000000"/>
+
+        <!-- X labels -->
+        <text x="110" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·24</text>
+        <text x="183" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·24</text>
+        <text x="257" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·24</text>
+        <text x="331" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·24</text>
+        <text x="405" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·25</text>
+        <text x="478" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·25</text>
+        <text x="552" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·25</text>
+        <text x="626" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·25</text>
+        <text x="700" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·26</text>
+        <text x="773" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·26*</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#001E29"></span> Alta intención</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#EA4099"></span> Baja intención</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#C8FF00"></span> Social</div>
+        <div class="legend-item"><span class="legend-line" style="background:#000000"></span> Total sesiones</div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>Las sesiones totales <strong>subieron</strong>. Q1-2024: <strong>738k</strong>. Q1-2026: <strong>970k</strong>. El problema no es de volumen.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>La cuota de <strong>alta intención</strong> cayó del <strong>55%</strong> al <span class="neg">25%</span>.</p></div>
+      <div class="bullet"><div class="marker">3</div><p>La cuota de <strong>baja intención</strong> creció del 22% al 40%. Lo que entró a reemplazar al tráfico que sí convierte.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>Lo que se percibe como "menos tráfico a tienda" es en realidad <span class="neg">menos tráfico que convierte</span>.</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 3 — H1 -->
+<section class="slide">
+  <div class="slide-tag">Hipótesis 1</div>
+  <div class="slide-num">03 / 10</div>
+  <h2 class="slide-title">El tráfico orgánico de búsqueda lleva <em>seis trimestres erosionándose</em>.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Organic Search · sesiones trimestrales</h4>
+      <svg class="chart-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+        <line x1="70" y1="350" x2="780" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="70" y1="20" x2="70" y2="350" stroke="#001E29" stroke-width="2"/>
+        <text x="60" y="354" text-anchor="end" font-size="16" font-weight="700" fill="#000000">0</text>
+        <text x="60" y="284" text-anchor="end" font-size="16" font-weight="700" fill="#000000">50k</text>
+        <text x="60" y="214" text-anchor="end" font-size="16" font-weight="700" fill="#000000">100k</text>
+        <text x="60" y="144" text-anchor="end" font-size="16" font-weight="700" fill="#000000">150k</text>
+        <text x="60" y="74" text-anchor="end" font-size="16" font-weight="700" fill="#000000">200k</text>
+        <line x1="70" y1="284" x2="780" y2="284" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="214" x2="780" y2="214" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="144" x2="780" y2="144" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="74" x2="780" y2="74" stroke="#000000" stroke-width="1" opacity="0.1"/>
+
+        <!-- Tendencia lineal -->
+        <line x1="110" y1="100" x2="773" y2="304" stroke="#000000" stroke-width="2" stroke-dasharray="6 5" opacity="0.4"/>
+
+        <!-- Organic Search -->
+        <polyline points="110,100.8 183,86.8 257,86.8 331,119 405,155.4 478,176.4 552,173.6 626,210 700,228.2 773,294"
+                  fill="none" stroke="#EA4099" stroke-width="4"/>
+        <circle cx="110" cy="100.8" r="6" fill="#EA4099"/>
+        <circle cx="183" cy="86.8" r="6" fill="#EA4099"/>
+        <circle cx="257" cy="86.8" r="6" fill="#EA4099"/>
+        <circle cx="331" cy="119" r="6" fill="#EA4099"/>
+        <circle cx="405" cy="155.4" r="6" fill="#EA4099"/>
+        <circle cx="478" cy="176.4" r="6" fill="#EA4099"/>
+        <circle cx="552" cy="173.6" r="6" fill="#EA4099"/>
+        <circle cx="626" cy="210" r="6" fill="#EA4099"/>
+        <circle cx="700" cy="228.2" r="6" fill="#EA4099"/>
+        <circle cx="773" cy="294" r="6" fill="#EA4099"/>
+
+        <text x="110" y="80" font-size="18" font-weight="800" fill="#000000" text-anchor="middle">178k</text>
+        <text x="773" y="282" font-size="18" font-weight="800" fill="#EA4099" text-anchor="end">40k*</text>
+
+        <text x="110" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·24</text>
+        <text x="183" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·24</text>
+        <text x="257" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·24</text>
+        <text x="331" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·24</text>
+        <text x="405" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·25</text>
+        <text x="478" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·25</text>
+        <text x="552" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·25</text>
+        <text x="626" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·25</text>
+        <text x="700" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·26</text>
+        <text x="773" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·26*</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line" style="background:#EA4099"></span> Organic Search</div>
+        <div class="legend-item"><span class="legend-line" style="background:#000000; opacity:0.4"></span> Tendencia</div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>Trayectoria: <strong>178k → 40k*</strong>. Pierde <span class="neg">78%</span> en seis trimestres.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>No es un quiebre. Es <strong>declive lineal</strong>: pierde entre 12k y 25k sesiones cada trimestre sin pausa desde Q3-2024.</p></div>
+      <div class="bullet"><div class="marker">3</div><p>El tiempo por sesión <strong>no cayó</strong> — subió de 88s a 155s. El tráfico que llega es bueno; llega menos.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>Causa probable: el blog produce alineado con <strong>catálogo de producto</strong>, no con el <strong>journey de búsqueda</strong> real del usuario.</p></div>
+      <div class="bullet"><div class="marker">5</div><p>Implica trabajo SEO de fondo y sostenido. No intervención táctica.</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 4 — H2 -->
+<section class="slide">
+  <div class="slide-tag">Hipótesis 2</div>
+  <div class="slide-num">04 / 10</div>
+  <h2 class="slide-title">PMAX <em>canibalizó</em> Paid Search dentro de <span class="accent">Google Ads</span>.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Paid Search vs Cross-network (PMAX) · sesiones trimestrales</h4>
+      <svg class="chart-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+        <line x1="70" y1="350" x2="780" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="70" y1="20" x2="70" y2="350" stroke="#001E29" stroke-width="2"/>
+        <text x="60" y="354" text-anchor="end" font-size="16" font-weight="700" fill="#000000">0</text>
+        <text x="60" y="280" text-anchor="end" font-size="16" font-weight="700" fill="#000000">80k</text>
+        <text x="60" y="210" text-anchor="end" font-size="16" font-weight="700" fill="#000000">160k</text>
+        <text x="60" y="140" text-anchor="end" font-size="16" font-weight="700" fill="#000000">240k</text>
+        <text x="60" y="70" text-anchor="end" font-size="16" font-weight="700" fill="#000000">320k</text>
+        <line x1="70" y1="280" x2="780" y2="280" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="210" x2="780" y2="210" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="140" x2="780" y2="140" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="70" x2="780" y2="70" stroke="#000000" stroke-width="1" opacity="0.1"/>
+
+        <!-- Línea vertical de quiebre Q1-26 -->
+        <line x1="700" y1="55" x2="700" y2="350" stroke="#000000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+        <text x="700" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="#000000">QUIEBRE Q1·26</text>
+
+        <!-- Paid Search -->
+        <polyline points="110,226.6 183,204.8 257,231 331,239.8 405,245 478,231 552,210 626,236.3 700,289.6 773,286.1"
+                  fill="none" stroke="#001E29" stroke-width="4"/>
+        <circle cx="110" cy="226.6" r="6" fill="#001E29"/>
+        <circle cx="183" cy="204.8" r="6" fill="#001E29"/>
+        <circle cx="257" cy="231" r="6" fill="#001E29"/>
+        <circle cx="331" cy="239.8" r="6" fill="#001E29"/>
+        <circle cx="405" cy="245" r="6" fill="#001E29"/>
+        <circle cx="478" cy="231" r="6" fill="#001E29"/>
+        <circle cx="552" cy="210" r="6" fill="#001E29"/>
+        <circle cx="626" cy="236.3" r="6" fill="#001E29"/>
+        <circle cx="700" cy="289.6" r="6" fill="#001E29"/>
+        <circle cx="773" cy="286.1" r="6" fill="#001E29"/>
+
+        <!-- Cross-network -->
+        <polyline points="110,302.8 183,316.8 257,315.9 331,304.5 405,314.1 478,317.6 552,312.4 626,286.1 700,83 773,171.5"
+                  fill="none" stroke="#EA4099" stroke-width="4"/>
+        <circle cx="110" cy="302.8" r="6" fill="#EA4099"/>
+        <circle cx="183" cy="316.8" r="6" fill="#EA4099"/>
+        <circle cx="257" cy="315.9" r="6" fill="#EA4099"/>
+        <circle cx="331" cy="304.5" r="6" fill="#EA4099"/>
+        <circle cx="405" cy="314.1" r="6" fill="#EA4099"/>
+        <circle cx="478" cy="317.6" r="6" fill="#EA4099"/>
+        <circle cx="552" cy="312.4" r="6" fill="#EA4099"/>
+        <circle cx="626" cy="286.1" r="6" fill="#EA4099"/>
+        <circle cx="700" cy="83" r="6" fill="#EA4099"/>
+        <circle cx="773" cy="171.5" r="6" fill="#EA4099"/>
+
+        <text x="730" y="306" font-size="18" font-weight="800" fill="#001E29">69k</text>
+        <text x="730" y="80" font-size="18" font-weight="800" fill="#EA4099">305k</text>
+
+        <text x="110" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·24</text>
+        <text x="183" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·24</text>
+        <text x="257" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·24</text>
+        <text x="331" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·24</text>
+        <text x="405" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·25</text>
+        <text x="478" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·25</text>
+        <text x="552" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·25</text>
+        <text x="626" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·25</text>
+        <text x="700" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·26</text>
+        <text x="773" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·26*</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line" style="background:#001E29"></span> Paid Search</div>
+        <div class="legend-item"><span class="legend-line" style="background:#EA4099"></span> Cross-network (PMAX)</div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>Paid Search se mantuvo <strong>estable</strong> entre 120k y 166k sesiones desde Q1-24 hasta Q4-25.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>En Q1-26 cae a <span class="neg">69k</span> sesiones: pierde <span class="neg">47%</span> en un solo trimestre.</p></div>
+      <div class="bullet"><div class="marker">3</div><p>Mismo trimestre, PMAX <strong>salta</strong> de 73k a <strong>305k</strong> sesiones: crece <span class="neg">+316%</span>.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>Inversión Google: <strong>112M Q4-25 → 110M Q1-26</strong>. El presupuesto no se redujo, se redistribuyó.</p></div>
+      <div class="bullet"><div class="marker">5</div><p>Implica separar PMAX de Search con exclusiones de marca y keywords. Proteger Search.</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 5 — H3 -->
+<section class="slide">
+  <div class="slide-tag">Hipótesis 3</div>
+  <div class="slide-num">05 / 10</div>
+  <h2 class="slide-title">El tráfico de PMAX hoy es <em>estructuralmente superficial</em>.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Cross-network · volumen vs tiempo medio de interacción</h4>
+      <svg class="chart-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+        <line x1="70" y1="350" x2="730" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="70" y1="20" x2="70" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="730" y1="20" x2="730" y2="350" stroke="#001E29" stroke-width="2"/>
+
+        <text x="60" y="354" text-anchor="end" font-size="16" font-weight="700" fill="#EA4099">0</text>
+        <text x="60" y="280" text-anchor="end" font-size="16" font-weight="700" fill="#EA4099">80k</text>
+        <text x="60" y="210" text-anchor="end" font-size="16" font-weight="700" fill="#EA4099">160k</text>
+        <text x="60" y="140" text-anchor="end" font-size="16" font-weight="700" fill="#EA4099">240k</text>
+        <text x="60" y="70" text-anchor="end" font-size="16" font-weight="700" fill="#EA4099">320k</text>
+
+        <text x="740" y="354" text-anchor="start" font-size="16" font-weight="700" fill="#001E29">0s</text>
+        <text x="740" y="280" text-anchor="start" font-size="16" font-weight="700" fill="#001E29">50s</text>
+        <text x="740" y="210" text-anchor="start" font-size="16" font-weight="700" fill="#001E29">100s</text>
+        <text x="740" y="140" text-anchor="start" font-size="16" font-weight="700" fill="#001E29">150s</text>
+        <text x="740" y="70" text-anchor="start" font-size="16" font-weight="700" fill="#001E29">200s</text>
+
+        <line x1="70" y1="280" x2="730" y2="280" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="210" x2="730" y2="210" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="140" x2="730" y2="140" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="70" x2="730" y2="70" stroke="#000000" stroke-width="1" opacity="0.1"/>
+
+        <!-- Volumen -->
+        <polyline points="103,302.8 176,316.8 250,315.9 323,304.5 397,314.1 470,317.6 544,312.4 617,286.1 691,83 764,171.5"
+                  fill="none" stroke="#EA4099" stroke-width="4"/>
+        <circle cx="103" cy="302.8" r="5" fill="#EA4099"/>
+        <circle cx="176" cy="316.8" r="5" fill="#EA4099"/>
+        <circle cx="250" cy="315.9" r="5" fill="#EA4099"/>
+        <circle cx="323" cy="304.5" r="5" fill="#EA4099"/>
+        <circle cx="397" cy="314.1" r="5" fill="#EA4099"/>
+        <circle cx="470" cy="317.6" r="5" fill="#EA4099"/>
+        <circle cx="544" cy="312.4" r="5" fill="#EA4099"/>
+        <circle cx="617" cy="286.1" r="5" fill="#EA4099"/>
+        <circle cx="691" cy="83" r="5" fill="#EA4099"/>
+        <circle cx="764" cy="171.5" r="5" fill="#EA4099"/>
+
+        <!-- Tiempo -->
+        <polyline points="103,142.8 176,133 250,161 323,193.2 397,67.2 470,92.4 544,175 617,238 691,284.2 764,320.6"
+                  fill="none" stroke="#001E29" stroke-width="4" stroke-dasharray="8 4"/>
+        <circle cx="103" cy="142.8" r="5" fill="#001E29"/>
+        <circle cx="176" cy="133" r="5" fill="#001E29"/>
+        <circle cx="250" cy="161" r="5" fill="#001E29"/>
+        <circle cx="323" cy="193.2" r="5" fill="#001E29"/>
+        <circle cx="397" cy="67.2" r="5" fill="#001E29"/>
+        <circle cx="470" cy="92.4" r="5" fill="#001E29"/>
+        <circle cx="544" cy="175" r="5" fill="#001E29"/>
+        <circle cx="617" cy="238" r="5" fill="#001E29"/>
+        <circle cx="691" cy="284.2" r="5" fill="#001E29"/>
+        <circle cx="764" cy="320.6" r="5" fill="#001E29"/>
+
+        <text x="103" y="125" font-size="18" font-weight="800" fill="#001E29" text-anchor="middle">148s</text>
+        <text x="764" y="338" font-size="18" font-weight="800" fill="#001E29" text-anchor="middle">21s</text>
+
+        <text x="103" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·24</text>
+        <text x="176" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·24</text>
+        <text x="250" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·24</text>
+        <text x="323" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·24</text>
+        <text x="397" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·25</text>
+        <text x="470" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·25</text>
+        <text x="544" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·25</text>
+        <text x="617" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·25</text>
+        <text x="691" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·26</text>
+        <text x="764" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·26*</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line" style="background:#EA4099"></span> Sesiones (izq.)</div>
+        <div class="legend-item"><span class="legend-line" style="background:#001E29"></span> Tiempo por sesión (der.)</div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>El tiempo medio por sesión cayó de <strong>148 segundos</strong> en Q1-24 a <span class="neg">21 segundos</span> en Q2-26*.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>Mientras tanto el volumen se <strong>multiplicó por 5.6</strong> (de 54k a 305k sesiones pico).</p></div>
+      <div class="bullet"><div class="marker">3</div><p>En 2024 PMAX traía tráfico que se quedaba <strong>2.5 minutos</strong>. Hoy la gente entra y se va.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>Causa probable: al escalar PMAX sin disciplina sobre <strong>señales y audiencias</strong>, se perdió el control de la calidad.</p></div>
+      <div class="bullet"><div class="marker">5</div><p>Implica revisar las señales que alimentan PMAX y dividir en campañas enfocadas por tipo de producto.</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 6 — H4 -->
+<section class="slide">
+  <div class="slide-tag">Hipótesis 4</div>
+  <div class="slide-num">06 / 10</div>
+  <h2 class="slide-title">Meta perdió alcance con el <em>mismo presupuesto</em>.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Meta Ads · evolución trimestral</h4>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Trim.</th>
+            <th>Inversión<br>(M COP)</th>
+            <th>Alcance<br>prom. mes</th>
+            <th>Impr.<br>(M)</th>
+            <th>CPM<br>(COP)</th>
+            <th>Frec.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Q1·24</td><td>81.6</td><td>2,807,278</td><td>36.6</td><td>2,232</td><td>4.33</td></tr>
+          <tr><td>Q2·24</td><td>86.3</td><td>2,476,795</td><td>26.3</td><td>3,276</td><td>3.59</td></tr>
+          <tr><td>Q3·24</td><td>91.1</td><td>2,134,314</td><td>23.9</td><td>3,815</td><td>3.73</td></tr>
+          <tr><td>Q4·24</td><td>71.6</td><td>1,224,238</td><td>14.3</td><td>5,005</td><td>3.94</td></tr>
+          <tr><td>Q1·25</td><td>69.0</td><td>1,358,629</td><td>16.3</td><td>4,222</td><td>4.06</td></tr>
+          <tr><td>Q2·25</td><td>78.0</td><td>1,344,851</td><td>20.5</td><td>3,813</td><td>5.11</td></tr>
+          <tr><td>Q3·25</td><td>79.1</td><td>1,118,267</td><td>13.8</td><td>5,720</td><td>4.11</td></tr>
+          <tr><td>Q4·25</td><td>71.0</td><td>1,205,003</td><td>12.2</td><td>5,803</td><td>3.42</td></tr>
+          <tr class="highlight"><td>Q1·26</td><td>72.2</td><td>1,684,628</td><td>16.2</td><td>4,465</td><td>3.19</td></tr>
+          <tr class="highlight"><td>Q2·26*</td><td>45.8</td><td>1,607,772</td><td>8.3</td><td>5,548</td><td>2.56</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>Inversión Meta <strong>estable</strong>: ~75M COP por trimestre durante todo el período.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>El alcance promedio mensual cayó de <strong>2.3M en 2024</strong> a <span class="neg">1.3M en 2025</span>, recupera parcial a <strong>1.7M en 2026</strong>.</p></div>
+      <div class="bullet"><div class="marker">3</div><p>El <strong>CPM se duplicó</strong>: de 2,232 COP a 4,465 COP. Cuesta el doble llegar a la misma gente.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>El problema no es presupuesto. Es <strong>configuración</strong>: restricciones de audiencia estrecharon la base útil.</p></div>
+      <div class="bullet"><div class="marker">5</div><p>Implica revisar audiencias, exclusiones y filtros acumulados. Aflojar lo que no agregue valor.</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 7 — H5 -->
+<section class="slide">
+  <div class="slide-tag">Hipótesis 5</div>
+  <div class="slide-num">07 / 10</div>
+  <h2 class="slide-title">Las redes sociales orgánicas entraron en <em>subproducción</em> a fines de 2024.</h2>
+  <div class="content-grid">
+    <div class="chart-box">
+      <h4>Organic Social · sesiones trimestrales</h4>
+      <svg class="chart-svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+        <line x1="70" y1="350" x2="780" y2="350" stroke="#001E29" stroke-width="2"/>
+        <line x1="70" y1="20" x2="70" y2="350" stroke="#001E29" stroke-width="2"/>
+        <text x="60" y="354" text-anchor="end" font-size="16" font-weight="700" fill="#000000">0</text>
+        <text x="60" y="280" text-anchor="end" font-size="16" font-weight="700" fill="#000000">8k</text>
+        <text x="60" y="210" text-anchor="end" font-size="16" font-weight="700" fill="#000000">16k</text>
+        <text x="60" y="140" text-anchor="end" font-size="16" font-weight="700" fill="#000000">24k</text>
+        <line x1="70" y1="280" x2="780" y2="280" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="210" x2="780" y2="210" stroke="#000000" stroke-width="1" opacity="0.1"/>
+        <line x1="70" y1="140" x2="780" y2="140" stroke="#000000" stroke-width="1" opacity="0.1"/>
+
+        <!-- Línea vertical de quiebre Q4-24 -->
+        <line x1="331" y1="55" x2="331" y2="350" stroke="#000000" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+        <text x="331" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="#000000">QUIEBRE Q4·24</text>
+
+        <polyline points="110,157.5 183,175 257,140 331,245 405,262.5 478,271.25 552,218.75 626,183.75 700,253.75 773,306.25"
+                  fill="none" stroke="#001E29" stroke-width="4"/>
+        <circle cx="110" cy="157.5" r="6" fill="#001E29"/>
+        <circle cx="183" cy="175" r="6" fill="#001E29"/>
+        <circle cx="257" cy="140" r="6" fill="#001E29"/>
+        <circle cx="331" cy="245" r="7" fill="#EA4099"/>
+        <circle cx="405" cy="262.5" r="6" fill="#001E29"/>
+        <circle cx="478" cy="271.25" r="6" fill="#001E29"/>
+        <circle cx="552" cy="218.75" r="6" fill="#001E29"/>
+        <circle cx="626" cy="183.75" r="6" fill="#001E29"/>
+        <circle cx="700" cy="253.75" r="6" fill="#001E29"/>
+        <circle cx="773" cy="306.25" r="6" fill="#001E29"/>
+
+        <text x="257" y="125" font-size="18" font-weight="800" fill="#001E29" text-anchor="middle">24k</text>
+        <text x="370" y="252" font-size="18" font-weight="800" fill="#EA4099">12k</text>
+        <text x="773" y="295" font-size="18" font-weight="800" fill="#001E29" text-anchor="end">5k*</text>
+
+        <text x="110" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·24</text>
+        <text x="183" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·24</text>
+        <text x="257" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·24</text>
+        <text x="331" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·24</text>
+        <text x="405" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·25</text>
+        <text x="478" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·25</text>
+        <text x="552" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q3·25</text>
+        <text x="626" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q4·25</text>
+        <text x="700" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q1·26</text>
+        <text x="773" y="370" text-anchor="middle" font-size="16" font-weight="700" fill="#000000">Q2·26*</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line" style="background:#001E29"></span> Organic Social · sesiones</div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet"><div class="marker">1</div><p>Estable en <strong>~22k sesiones</strong> hasta Q3-24. Cae a la mitad en Q4-24 (<span class="neg">12k</span>) y no se recupera.</p></div>
+      <div class="bullet"><div class="marker">2</div><p>El quiebre coincide con <strong>cambio de año</strong>. Sugiere decisión interna (plan editorial), no algoritmo en contra.</p></div>
+      <div class="bullet"><div class="marker">3</div><p>Las plataformas premian hoy <strong>frescura, reactividad y formatos verticales cortos</strong>. La parrilla planificada quedó atrás.</p></div>
+      <div class="bullet"><div class="marker">4</div><p>El contenido sigue siendo broadcast plano (producto, showroom, instalación). Sin UGC, sin creator-led, sin tendencias.</p></div>
+      <div class="bullet"><div class="marker">5</div><p>Implica reconstruir cadencia con lógica de plataformas actuales. Pasar de "campaña planificada" a "reacción continua".</p></div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 8 — SÍNTESIS -->
+<section class="slide">
+  <div class="slide-tag">Síntesis</div>
+  <div class="slide-num">08 / 10</div>
+  <h2 class="slide-title">Pagamos cada vez <em>más</em> por cada sesión que <span class="accent">importa</span>.</h2>
+
+  <div class="sintesis-grid">
+    <div class="big-stat">
+      <div class="label">Inversión Google Ads</div>
+      <div class="value">7×</div>
+      <div class="desc">De 15M COP en Q1-24 a 110M COP en Q1-26. Crecimiento sostenido del presupuesto.</div>
+    </div>
+    <div class="big-stat crit">
+      <div class="label">Sesiones de alta intención</div>
+      <div class="value">−40<span class="small">%</span></div>
+      <div class="desc">De 408k a 247k en el mismo período. Cayeron los canales que históricamente convierten.</div>
+    </div>
+    <div class="big-stat">
+      <div class="label">Costo por sesión alta intención</div>
+      <div class="value">12×</div>
+      <div class="desc">De 37 COP a 445 COP. Cada peso adicional produce tráfico, pero cada vez menos del que importa.</div>
+    </div>
+  </div>
+
+  <div class="sintesis-narrativa">
+    El ecosistema digital de Decorcerámica no perdió volumen — <strong>perdió calidad</strong>. La inversión total creció siete veces; las sesiones totales subieron; el tráfico que llega a comprar (online o en tienda) cayó a la mitad. La mezcla de canales se invirtió a costa de los canales que más sirven a los objetivos del negocio. Mientras se percibe "menos tráfico a tienda", lo que en realidad ocurre es <strong>menos tráfico con intención de comprar</strong>.
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 9 — CAUSA RAÍZ -->
+<section class="slide">
+  <div class="slide-tag">Causa raíz operativa</div>
+  <div class="slide-num">09 / 10</div>
+  <h2 class="causa-title">El equipo <span class="accent">se aburguesó</span>.</h2>
+  <div class="causa-sub">Cuatro frentes operativos donde la práctica se quedó en lo que funcionaba hace tres o cuatro años. Las hipótesis 1 a 5 son <strong>síntomas</strong> de un mismo problema estructural.</div>
+
+  <div class="frentes-grid">
+    <div class="frente">
+      <h3>Trafficker digital</h3>
+      <div class="conecta">Explica H2 · H3 · H4</div>
+      <p>Opera las cuentas con la arquitectura mental de antes de PMAX y antes de la consolidación de Meta hacia señales. Faltan exclusiones de keywords, asset groups sin segmentar, audiencias Meta acumulando filtros sin podar.</p>
+    </div>
+    <div class="frente">
+      <h3>Creatividad digital</h3>
+      <div class="conecta">Explica H1 · H3 · H5</div>
+      <p>Produce con el mismo molde de hace tres años: mostrar producto, mostrar showroom. La producción habla de lo que la marca quiere decir, no de lo que la audiencia quiere consumir. Sin testing de hooks ni ángulos.</p>
+    </div>
+    <div class="frente">
+      <h3>Redes sociales</h3>
+      <div class="conecta">Explica H5</div>
+      <p>Sigue en lógica de parrilla planificada con semanas de anticipación. Las plataformas premian hoy frescura, reactividad, formatos verticales cortos. No participamos de tendencias, no hay UGC, no hay creator-led.</p>
+    </div>
+    <div class="frente">
+      <h3>Blog</h3>
+      <div class="conecta">Explica H1</div>
+      <p>Produce artículos para una lógica SEO que ya no rige. Hoy posicionan piezas que responden el journey real del usuario con profundidad. Si los artículos están alineados con catálogo y no con búsqueda real, no posicionan.</p>
+    </div>
+  </div>
+
+  <div class="ia-footnote">
+    Entre 2023 y 2026 la economía de producción de contenido se transformó con la entrada de <strong>IA generativa</strong>. Lo que costaba diez horas hoy cuesta una hora bien dirigida. Marcas que adoptaron herramientas nuevas están produciendo cinco veces el volumen con calidad similar. <strong>El costo de quedarse quieto crece cada trimestre.</strong>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+<!-- SLIDE 10 — PLAN -->
+<section class="slide">
+  <div class="slide-tag">Plan a 6 meses · preview</div>
+  <div class="slide-num">10 / 10</div>
+  <h2 class="slide-title">Cuatro ejes de trabajo para los próximos <em>seis meses</em>.</h2>
+
+  <div class="ejes-grid">
+    <div class="eje">
+      <div class="eje-num">01</div>
+      <h3>Reestructurar las campañas pagas</h3>
+      <div class="horizonte">Meses 1–2 · intervención puntual</div>
+      <p>Auditoría y limpieza estructural de Google Ads: separar PMAX de Search con exclusiones, redistribuir presupuesto, segmentar asset groups. Auditoría de Meta: aflojar restricciones acumuladas. Decisión sobre Shopping.</p>
+      <div class="conecta">Conecta · H2 · H3 · H4</div>
+    </div>
+    <div class="eje">
+      <div class="eje-num">02</div>
+      <h3>Recuperar SEO orgánico</h3>
+      <div class="horizonte">Meses 1–6 · trabajo sostenido</div>
+      <p>Re-investigar el journey real del usuario. Renovar el calendario editorial del blog con foco en intención, no en catálogo. Producir piezas con autoridad y profundidad semántica.</p>
+      <div class="conecta">Conecta · H1</div>
+    </div>
+    <div class="eje">
+      <div class="eje-num">03</div>
+      <h3>Renovar el contenido social</h3>
+      <div class="horizonte">Meses 1–6 · trabajo sostenido</div>
+      <p>De parrilla planificada a producción reactiva con cadencia más alta. Adoptar formatos verticales cortos, UGC y creator-led. Testing de hooks y ángulos por audiencia, no por producto.</p>
+      <div class="conecta">Conecta · H5</div>
+    </div>
+    <div class="eje">
+      <div class="eje-num">04</div>
+      <h3>Modernizar la operación del equipo</h3>
+      <div class="horizonte">Meses 1–3 instalar · sostenido</div>
+      <p>Adoptar IA generativa en workflows de producción (como acelerador). Instalar rituales trimestrales de revisión estructural. Indicadores de calidad de mezcla en el dashboard.</p>
+      <div class="conecta">Conecta · Causa raíz</div>
+    </div>
+  </div>
+  <div class="firma">delaossa.co</div>
+</section>
+
+</div>
+
+<div class="controls">
+  <button class="prev" aria-label="Anterior">←</button>
+  <span class="indicator">1 / 10</span>
+  <button class="next" aria-label="Siguiente">→</button>
+</div>
+
+<script>
+(function() {
+  var slides = document.querySelectorAll('.slide');
+  var indicator = document.querySelector('.indicator');
+  var total = slides.length;
+  var current = 0;
+
+  function show(n) {
+    if (n < 0) n = 0;
+    if (n >= total) n = total - 1;
+    slides[current].classList.remove('active');
+    slides[n].classList.add('active');
+    current = n;
+    indicator.textContent = (current + 1) + ' / ' + total;
+  }
+
+  document.querySelector('.prev').addEventListener('click', function() { show(current - 1); });
+  document.querySelector('.next').addEventListener('click', function() { show(current + 1); });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      show(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      show(current - 1);
+    } else if (e.key === 'Home') {
+      show(0);
+    } else if (e.key === 'End') {
+      show(total - 1);
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
