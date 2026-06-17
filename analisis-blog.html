@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis del blog de Cadena — delaossa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul:#001E29; --lima:#C8FF00; --fucsia:#EA4099;
+    --blanco:#FFFFFF; --negro:#000000; --fucsia-dark:#B81469;
+    --tinta:#0d0d0d; --suave:rgba(0,0,0,.10); --suave2:rgba(0,0,0,.045);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--azul);}
+  body{font-family:'Open Sans',sans-serif;color:var(--tinta);}
+  .deck{position:relative;}
+  .slide{
+    display:none; min-height:100vh; width:100%;
+    padding:clamp(40px,6vh,64px) clamp(36px,7vw,90px);
+    flex-direction:column; justify-content:center;
+    background:var(--blanco);
+  }
+  .slide.active{display:flex;}
+  .inner{max-width:1140px;width:100%;margin:0 auto;}
+  h1.title{
+    font-family:'Playfair Display',serif;font-weight:900;
+    font-size:clamp(40px,7.2vh,76px);line-height:1.07;letter-spacing:-.01em;
+    margin-bottom:clamp(20px,4vh,40px);color:var(--azul);
+  }
+  h1.title .mark-l{background:var(--lima);color:var(--negro);padding:0 .14em;border-radius:2px;}
+  h1.title .mark-f{background:var(--fucsia);color:var(--blanco);padding:0 .14em;border-radius:2px;}
+  .lead{font-size:clamp(18px,2.5vh,25px);line-height:1.5;max-width:42ch;color:#222;}
+  .note{font-size:clamp(14px,1.85vh,19px);color:rgba(0,0,0,.55);margin-top:clamp(14px,2.4vh,26px);}
+  p.body{font-size:clamp(17px,2.25vh,23px);line-height:1.55;max-width:60ch;margin-bottom:.7em;color:#1c1c1c;}
+
+  /* portada / cierre oscuros */
+  .slide--dark{background:var(--azul);color:var(--blanco);}
+  .slide--dark h1.title{color:var(--blanco);}
+  .slide--dark .lead{color:rgba(255,255,255,.82);}
+  .accent-lima{color:var(--lima);}
+  .brand{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(16px,2vh,20px);letter-spacing:.01em;margin-top:clamp(28px,5vh,52px);}
+  .brand .dot{color:var(--lima);}
+  .kicker{font-size:clamp(13px,1.7vh,16px);letter-spacing:.22em;text-transform:uppercase;color:var(--fucsia);font-weight:700;margin-bottom:clamp(14px,2.4vh,22px);}
+  .slide--dark .kicker{color:var(--lima);}
+
+  /* big stats */
+  .stats{display:flex;flex-wrap:wrap;gap:clamp(20px,4vw,56px);margin-bottom:clamp(18px,3vh,30px);}
+  .stat .num{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(56px,11.5vh,120px);line-height:.92;color:var(--fucsia);}
+  .stat .num.azul{color:var(--azul);}
+  .stat .num.ok{color:var(--fucsia-dark);}
+  .stat .lab{font-size:clamp(14px,1.9vh,20px);color:#333;margin-top:.4em;max-width:18ch;}
+
+  /* banda distribución */
+  .band{background:var(--azul);border-radius:8px;display:flex;flex-wrap:wrap;gap:0;overflow:hidden;margin-top:clamp(8px,2vh,16px);}
+  .band .cell{flex:1 1 auto;min-width:90px;padding:clamp(12px,2.2vh,20px) clamp(10px,1.4vw,20px);text-align:center;border-right:1px solid rgba(255,255,255,.10);}
+  .band .cell:last-child{border-right:none;}
+  .band .c-num{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(26px,4.4vh,46px);color:var(--lima);line-height:1;}
+  .band .c-lab{font-size:clamp(12px,1.55vh,15px);color:rgba(255,255,255,.85);margin-top:.45em;letter-spacing:.02em;}
+
+  /* tablas */
+  table{width:100%;border-collapse:collapse;font-size:clamp(15px,1.95vh,21px);margin-top:clamp(8px,1.6vh,14px);}
+  thead th{background:var(--azul);color:#fff;text-align:left;padding:.62em .85em;font-weight:600;font-size:clamp(13px,1.7vh,18px);letter-spacing:.02em;}
+  tbody td{padding:.5em .85em;border-bottom:1px solid var(--suave);vertical-align:middle;}
+  tbody tr:nth-child(even){background:var(--suave2);}
+  td.num{text-align:right;white-space:nowrap;font-weight:700;color:var(--azul);font-variant-numeric:tabular-nums;}
+  th.num{text-align:right;white-space:normal;line-height:1.15;}
+  .url{font-family:'Open Sans';word-break:break-word;overflow-wrap:anywhere;color:#16323d;}
+  .q{font-weight:600;color:var(--fucsia-dark);}
+
+  /* lista url simple */
+  .urls{list-style:none;margin:clamp(10px,2vh,18px) 0;display:grid;gap:.4em;}
+  .urls li{font-size:clamp(15px,1.95vh,21px);word-break:break-word;color:#16323d;padding-left:1.1em;position:relative;}
+  .urls li::before{content:"";position:absolute;left:0;top:.62em;width:.5em;height:.5em;background:var(--fucsia);border-radius:50%;}
+
+  /* highlight (simil / honestidad / cierre) */
+  .pull{border-left:6px solid var(--lima);padding:clamp(12px,2vh,18px) clamp(16px,2vw,26px);background:rgba(200,255,0,.10);font-size:clamp(17px,2.4vh,25px);font-style:italic;line-height:1.45;margin-top:clamp(16px,2.6vh,26px);max-width:58ch;}
+  .pull.f{border-left-color:var(--fucsia);background:rgba(234,64,153,.08);}
+  .slide--dark .pull{background:rgba(200,255,0,.12);font-style:normal;}
+
+  /* lista numerada (frentes) */
+  .steps{display:grid;gap:clamp(12px,2.2vh,20px);margin-top:clamp(10px,2vh,18px);}
+  .step{display:flex;gap:clamp(16px,2vw,26px);align-items:baseline;}
+  .step .n{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(34px,6vh,62px);color:var(--lima);line-height:.9;min-width:1.3em;-webkit-text-stroke:1px var(--azul);}
+  .step .txt{font-size:clamp(16px,2.15vh,22px);line-height:1.45;}
+  .step .txt b{font-weight:700;color:var(--azul);}
+
+  .estados{display:flex;flex-wrap:wrap;gap:.5em;margin-top:clamp(12px,2vh,18px);}
+  .estados .e{font-size:clamp(13px,1.7vh,17px);background:var(--azul);color:#fff;padding:.35em .7em;border-radius:20px;}
+  .estados .e b{color:var(--lima);}
+
+  /* navegación */
+  .nav-btn{position:fixed;top:50%;transform:translateY(-50%);z-index:30;background:rgba(0,30,41,.0);border:none;color:var(--azul);font-size:34px;cursor:pointer;padding:16px 12px;opacity:.45;transition:opacity .2s;font-family:'Open Sans';}
+  .nav-btn:hover{opacity:1;}
+  .nav-prev{left:8px;} .nav-next{right:8px;}
+  .indicator{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;font-size:14px;letter-spacing:.12em;color:var(--azul);background:rgba(255,255,255,.7);padding:5px 14px;border-radius:20px;font-weight:600;}
+  .slide--dark + .indicator{}
+
+  /* móvil: scroll, todas visibles */
+  @media (max-width:768px){
+    .slide{display:flex!important;min-height:auto;padding:46px 24px;border-bottom:1px solid rgba(0,0,0,.08);}
+    h1.title{font-size:clamp(30px,8.5vw,42px);}
+    .lead{font-size:clamp(16px,4.6vw,19px);}
+    p.body{font-size:clamp(15px,4.3vw,18px);}
+    .stat .num{font-size:clamp(48px,16vw,72px);}
+    table{font-size:clamp(13px,3.7vw,16px);table-layout:fixed;}
+    td,th,.url,.urls li{overflow-wrap:anywhere;word-break:break-all;}
+    thead th,tbody td{padding:.5em .45em;}
+    .urls li,.step .txt{font-size:clamp(14px,4vw,17px);}
+    .deck,.slide,.inner{overflow-x:hidden;}
+    .nav-btn,.indicator{display:none!important;}
+    .stats{gap:24px;}
+  }
+  @media print{
+    .slide{display:flex!important;page-break-after:always;min-height:100vh;}
+    .nav-btn,.indicator{display:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 PORTADA -->
+  <section class="slide slide--dark active">
+    <div class="inner">
+      <div class="kicker">Análisis de blog · Cadena</div>
+      <h1 class="title">Tu blog tiene <span class="accent-lima">diez héroes</span><br>y mucho peso muerto</h1>
+      <p class="lead">Diagnóstico de los 353 artículos del blog de Cadena: qué rinde, qué estorba y qué hacer.</p>
+      <div class="brand">delaossa<span class="dot">.co</span> · junio 2026</div>
+    </div>
+  </section>
+
+  <!-- 2 LO QUE HAY HOY -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Lo que hay <span class="mark-l">hoy</span></h1>
+      <div class="stats">
+        <div class="stat"><div class="num azul">353</div><div class="lab">artículos publicados</div></div>
+        <div class="stat"><div class="num ok">33</div><div class="lab">traen tráfico real (9%)</div></div>
+        <div class="stat"><div class="num">252</div><div class="lab">no aportan nada (71%)</div></div>
+      </div>
+      <div class="band">
+        <div class="cell"><div class="c-num">10</div><div class="c-lab">Estrella</div></div>
+        <div class="cell"><div class="c-num">23</div><div class="c-lab">Sólido</div></div>
+        <div class="cell"><div class="c-num">68</div><div class="c-lab">Dormido</div></div>
+        <div class="cell"><div class="c-num">138</div><div class="c-lab">Débil</div></div>
+        <div class="cell"><div class="c-num">82</div><div class="c-lab">Muerto</div></div>
+        <div class="cell"><div class="c-num">32</div><div class="c-lab">Fantasma</div></div>
+      </div>
+      <p class="note">El blog produce, pero casi nada de lo que produce trabaja. ~10.000 clics de Google en 16 meses.</p>
+    </div>
+  </section>
+
+  <!-- 3 LO QUE RINDE -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Lo que está <span class="mark-l">rindiendo</span></h1>
+      <table>
+        <thead><tr><th>Artículo</th><th class="num">Clics<br>(16 meses)</th><th class="num">Apariciones<br>en Google (16 m)</th><th class="num">Posición<br>en Google</th></tr></thead>
+        <tbody>
+          <tr><td class="url">/que-tiene-que-ver-la-factura-electronica-con-la-declaracion-de-renta/</td><td class="num">1.627</td><td class="num">87.943</td><td class="num">8,9</td></tr>
+          <tr><td class="url">/asi-son-las-franquicias-digitales/</td><td class="num">1.479</td><td class="num">74.860</td><td class="num">8,4</td></tr>
+          <tr><td class="url">/facturacion-electronica-efectividad-y-eficiencia/</td><td class="num">778</td><td class="num">24.893</td><td class="num">15,1</td></tr>
+          <tr><td class="url">/declaracion-de-renta-con-facturacion-electronica/</td><td class="num">751</td><td class="num">45.614</td><td class="num">5,7</td></tr>
+          <tr><td class="url">/procesos-criticos-organizacionales/</td><td class="num">542</td><td class="num">36.267</td><td class="num">5,2</td></tr>
+          <tr><td class="url">/el-caso-de-exito-de-spotify/</td><td class="num">338</td><td class="num">15.497</td><td class="num">9,9</td></tr>
+          <tr><td class="url">/documento-equivalente-para-servicios-publicos/</td><td class="num">323</td><td class="num">12.875</td><td class="num">10,3</td></tr>
+          <tr><td class="url">/sarlaft-para-el-sector-transporte-2/</td><td class="num">274</td><td class="num">9.717</td><td class="num">7,8</td></tr>
+          <tr><td class="url">/los-pros-y-los-contras-de-la-automatizacion-del-trabajo/</td><td class="num">246</td><td class="num">12.309</td><td class="num">19,2</td></tr>
+          <tr><td class="url">/documento-soporte-para-no-obligados-a-factuar/</td><td class="num">192</td><td class="num">40.508</td><td class="num">7,4</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Estos 10 artículos concentran el 66% de todos los clics del blog. (Clics = personas que entraron desde Google · Apariciones = veces que se mostró · Posición = lugar promedio.)</p>
+    </div>
+  </section>
+
+  <!-- 4 CANIBALIZACIÓN -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Tu mejor tema <span class="mark-f">compite</span> contra sí mismo</h1>
+      <p class="body">Facturación electrónica es tu mayor fortaleza en Google. Pero varios artículos pelean por la misma búsqueda y se estorban. En <span class="q">“recepción de factura electrónica”</span>: 5 artículos, 2.980 apariciones, casi 0 clics.</p>
+      <ul class="urls">
+        <li class="url">/recepcion-y-eventos-titulo-valor/</li>
+        <li class="url">/recepcion-de-factura-electronica/</li>
+        <li class="url">/recepcion-factura-electronica-para-proveedores/</li>
+        <li class="url">/factura-electronica-como-titulo-valor-todo-lo-que-debes-saber/</li>
+        <li class="url">/automatizar-la-recepcion-de-facturas/</li>
+      </ul>
+      <p class="note">También compiten entre sí los grupos “documento equivalente” (5 artículos, uno duplicado) y “facturación POS” (4 artículos).</p>
+      <div class="pull f">Cinco vendedores tuyos gritándole al mismo cliente a la vez; el cliente se va.</div>
+    </div>
+  </section>
+
+  <!-- 5 PESO MUERTO -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Lo que <span class="mark-f">no</span> está funcionando</h1>
+      <div class="stats">
+        <div class="stat"><div class="num">82</div><div class="lab">muertos: no traen nada</div></div>
+        <div class="stat"><div class="num">32</div><div class="lab">fantasmas: Google no los indexa</div></div>
+        <div class="stat"><div class="num">145</div><div class="lab">sin un solo clic en 16 meses</div></div>
+      </div>
+      <p class="body">“Fantasma” significa que Google los visitó y decidió que no valían la pena: viejos, repetidos o de relleno. Ejemplos reales:</p>
+      <ul class="urls">
+        <li class="url">/lorem-ipsum/ · /what-is-lorem-ipsum-2/ · /what-is-lorem-ipsum-3/ <span style="color:rgba(0,0,0,.5)">(páginas de prueba)</span></li>
+        <li class="url">/maneja-correctamente-las-contingencias-en-facturacion-electronica/ y /manejo-correcto-de-las-contingencias-en-facturacion-electronica/ <span style="color:rgba(0,0,0,.5)">(el mismo artículo duplicado)</span></li>
+      </ul>
+      <div class="pull f">Esto no se arregla pidiéndole a Google que los indexe; se arregla limpiando.</div>
+    </div>
+  </section>
+
+  <!-- 6 IA -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">La <span class="mark-l">IA</span> ya te está enviando visitas</h1>
+      <table style="max-width:560px">
+        <thead><tr><th>Fuente</th><th class="num">Visitas (16 meses)</th></tr></thead>
+        <tbody>
+          <tr><td>ChatGPT</td><td class="num">350</td></tr>
+          <tr><td>Perplexity</td><td class="num">142</td></tr>
+          <tr><td>Gemini</td><td class="num">51</td></tr>
+          <tr><td>Otros</td><td class="num">32</td></tr>
+          <tr><td><b>Total</b></td><td class="num">~575</td></tr>
+        </tbody>
+      </table>
+      <p class="body" style="margin-top:1em">Es poco (0,8% del tráfico de Google), pero es un canal nuevo que apenas empieza. Preparar el contenido ahora para que la IA te cite cuesta poco y vale mucho.</p>
+    </div>
+  </section>
+
+  <!-- 7 OPORTUNIDADES -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Lo que está a un solo <span class="mark-l">empujón</span></h1>
+      <p class="body">Artículos en la página 2 de Google, con mucha gente viéndolos y casi nadie entrando. Subirlos a página 1 captura tráfico que ya casi tienes.</p>
+      <table>
+        <thead><tr><th>Búsqueda</th><th>Artículo</th><th class="num">Puesto<br>en Google</th><th class="num">Apariciones<br>(90 días)</th></tr></thead>
+        <tbody>
+          <tr><td class="q">marca personal</td><td class="url">/como-crear-una-marca-personal/</td><td class="num">11</td><td class="num">1.992</td></tr>
+          <tr><td class="q">firma digital</td><td class="url">/lo-que-toda-organizacion-debe-sabe-firma-digital/</td><td class="num">11</td><td class="num">468</td></tr>
+          <tr><td class="q">factura de contingencia</td><td class="url">/activar-contingencia-en-facturacion-electronica/</td><td class="num">13</td><td class="num">183</td></tr>
+          <tr><td class="q">canales de comunicación</td><td class="url">/canales-de-comuncacion-para-cada-generacion/</td><td class="num">13</td><td class="num">136</td></tr>
+          <tr><td class="q">factoring</td><td class="url">/factoring-con-factura-electronica/</td><td class="num">13</td><td class="num">136</td></tr>
+          <tr><td class="q">sistema de facturación POS</td><td class="url">/facturacion-electronica-pos/</td><td class="num">12</td><td class="num">122</td></tr>
+          <tr><td class="q">gestión de riesgo empresarial</td><td class="url">/gestion-de-riesgos-empresariales-para-colombia/</td><td class="num">12</td><td class="num">120</td></tr>
+          <tr><td class="q">gestión de la tecnología</td><td class="url">/gestion-de-la-tecnologia-empresarial/</td><td class="num">13</td><td class="num">113</td></tr>
+          <tr><td class="q">programa de incentivos</td><td class="url">/programa-de-incentivos-un-aliado-para-aumentar-la-productividad/</td><td class="num">11</td><td class="num">109</td></tr>
+          <tr><td class="q">laft, qué es</td><td class="url">/riesgo-laft-en-seguridad-privada/</td><td class="num">12</td><td class="num">99</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Estas son 10 de las 33 oportunidades. Apariciones = veces que se mostró en Google en los últimos 90 días.</p>
+    </div>
+  </section>
+
+  <!-- 8 FRENTES -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">Cuatro <span class="mark-l">frentes</span>, en orden</h1>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><b>Limpiar</b> — borrar relleno y duplicados: 114 artículos muertos o no indexados.</div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><b>Consolidar</b> — unir los que compiten: 5 grupos de facturación.</div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><b>Optimizar</b> — empujar los que están a un paso: 33 oportunidades + 68 dormidos.</div></div>
+        <div class="step"><div class="n">4</div><div class="txt"><b>Producir mejor</b> — menos cantidad, más calidad y orden por tema.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 DICCIONARIO CSV -->
+  <section class="slide">
+    <div class="inner">
+      <h1 class="title">El archivo de datos: cómo <span class="mark-l">leerlo</span></h1>
+      <p class="body">Te entregamos un archivo con tus 353 artículos, uno por fila, con su estado y sus números.</p>
+      <table>
+        <thead><tr><th>Columna</th><th>Qué significa</th></tr></thead>
+        <tbody>
+          <tr><td class="q">url</td><td>El artículo</td></tr>
+          <tr><td class="q">estado</td><td>El más importante. Seis posibles (abajo)</td></tr>
+          <tr><td class="q">impresiones</td><td>Veces que apareció en Google</td></tr>
+          <tr><td class="q">clics</td><td>Cuántas personas entraron desde Google</td></tr>
+          <tr><td class="q">posición</td><td>En qué lugar de Google aparece (1 es lo más alto)</td></tr>
+          <tr><td class="q">ctr</td><td>De los que lo vieron, qué % entró</td></tr>
+          <tr><td class="q">vistas</td><td>Visitas totales (todas las fuentes)</td></tr>
+          <tr><td class="q">engagement</td><td>% de visitas con interacción real</td></tr>
+        </tbody>
+      </table>
+      <div class="estados">
+        <span class="e"><b>Estrella</b> rinde fuerte</span>
+        <span class="e"><b>Sólido</b> rinde bien</span>
+        <span class="e"><b>Dormido</b> lo ven, no entran</span>
+        <span class="e"><b>Débil</b> trae poco</span>
+        <span class="e"><b>Muerto</b> no trae nada</span>
+        <span class="e"><b>Fantasma</b> Google no lo indexa</span>
+      </div>
+      <p class="note">Cómo usarlo: filtra la columna estado para ver, por ejemplo, todos los “Muerto” (a limpiar) o los “Dormido” (a optimizar).</p>
+    </div>
+  </section>
+
+  <!-- 10 CIERRE -->
+  <section class="slide slide--dark">
+    <div class="inner">
+      <div class="kicker">El siguiente paso</div>
+      <h1 class="title">De aquí sale el <span class="accent-lima">plan</span></h1>
+      <p class="lead">Esta es la foto. Sigue el plan de trabajo: qué tocar primero, en qué orden, con qué meta. El blog no necesita más artículos; necesita que los que ya tienes trabajen.</p>
+      <div class="pull">No te falta sembrar más; te falta cosechar lo que ya plantaste.</div>
+      <div class="brand">delaossa<span class="dot">.co</span></div>
+    </div>
+  </section>
+
+</div>
+
+<button class="nav-btn nav-prev" aria-label="Anterior">&#8249;</button>
+<button class="nav-btn nav-next" aria-label="Siguiente">&#8250;</button>
+<div class="indicator">1 / 10</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var cur = 0;
+  var ind = document.querySelector('.indicator');
+  function show(i){
+    cur = (i + slides.length) % slides.length;
+    slides.forEach(function(s,j){ s.classList.toggle('active', j===cur); });
+    ind.textContent = (cur+1) + ' / ' + slides.length;
+    if(window.scrollY) window.scrollTo(0,0);
+  }
+  document.querySelector('.nav-next').addEventListener('click', function(){ show(cur+1); });
+  document.querySelector('.nav-prev').addEventListener('click', function(){ show(cur-1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){ show(cur+1); }
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){ show(cur-1); }
+  });
+  show(0);
+</script>
+</body>
+</html>
