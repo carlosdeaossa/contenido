@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico del blog — Cargo Care Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#001E29;
+  --lime:#C8FF00;
+  --lime-dark:#303D00;
+  --fuchsia:#EA4099;
+  --fuchsia-dark:#B81469;
+  --white:#FFFFFF;
+  --black:#000000;
+  --hair:rgba(0,0,0,0.12);
+  --meta:rgba(0,0,0,0.45);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--white);color:var(--black);font-family:'Open Sans',system-ui,sans-serif;}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;margin:0;font-weight:700;}
+a{color:var(--navy);text-decoration:underline;text-decoration-color:var(--fuchsia);text-decoration-thickness:2px;font-weight:700;}
+a:hover{color:var(--fuchsia-dark);}
+.accent{background:var(--lime);color:var(--black);padding:.06em .18em;line-height:1.5;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:.08em;white-space:nowrap;}
+.accent-fx{background:var(--fuchsia);color:var(--white);padding:.06em .18em;line-height:1.5;box-decoration-break:clone;-webkit-box-decoration-break:clone;border-radius:.08em;white-space:nowrap;}
+
+/* ---- nav sections bar ---- */
+#sectionbar{
+  position:fixed;top:0;left:0;width:100%;z-index:50;
+  background:var(--navy);
+  display:flex;align-items:center;gap:4px;
+  padding:10px 24px;overflow-x:auto;white-space:nowrap;
+}
+#sectionbar button{
+  background:transparent;border:none;color:rgba(255,255,255,0.55);
+  font-family:'Open Sans',sans-serif;font-weight:700;font-size:clamp(12px,1.3vh,14px);
+  padding:8px 14px;border-radius:20px;cursor:pointer;letter-spacing:.02em;
+  transition:all .2s;
+}
+#sectionbar button:hover{color:var(--white);}
+#sectionbar button.active{background:var(--lime);color:var(--black);}
+
+/* ---- deck / slides ---- */
+#deck{position:relative;width:100%;height:100vh;padding-top:52px;}
+.slide{
+  position:absolute;inset:0;top:52px;
+  opacity:0;visibility:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:60px 80px;
+}
+.slide.active{position:relative;opacity:1;visibility:visible;z-index:2;}
+.slide-inner{width:100%;max-width:1400px;display:flex;flex-direction:column;gap:clamp(16px,2.4vh,28px);align-items:center;text-align:center;}
+.slide-inner.wide{max-width:1500px;}
+
+.eyebrow{font-size:clamp(14px,1.6vh,18px);letter-spacing:.12em;text-transform:uppercase;color:var(--fuchsia-dark);font-weight:700;}
+.slide h1.title{font-size:clamp(40px,6vh,64px);line-height:1.3;color:var(--navy);max-width:1100px;}
+.slide h1.title.big{font-size:clamp(48px,7vh,72px);}
+.body-text{font-size:clamp(20px,2.3vh,26px);line-height:1.5;max-width:980px;color:var(--black);}
+.body-text + .body-text{margin-top:-8px;}
+
+.stats-row{display:flex;gap:clamp(24px,4vw,64px);justify-content:center;flex-wrap:wrap;margin:6px 0;}
+.stat{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.stat .num{font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(56px,9vh,110px);color:var(--lime-dark);line-height:1;}
+.stat .num.fx{color:var(--fuchsia-dark);}
+.stat .lbl{font-size:clamp(14px,1.6vh,18px);color:var(--meta);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+
+.cards-grid{display:grid;gap:20px;width:100%;justify-content:center;}
+.cards-grid.n4{grid-template-columns:repeat(4,minmax(200px,260px));}
+.cards-grid.n5{grid-template-columns:repeat(5,minmax(180px,240px));}
+.card{background:var(--white);border:2px solid var(--navy);border-radius:14px;padding:22px 20px;text-align:left;display:flex;flex-direction:column;gap:8px;}
+.card .k{font-size:clamp(14px,1.5vh,17px);font-weight:800;color:var(--fuchsia-dark);text-transform:uppercase;letter-spacing:.04em;}
+.card .v{font-size:clamp(15px,1.7vh,19px);line-height:1.4;color:var(--black);}
+
+table.data-table{border-collapse:collapse;width:100%;max-width:1240px;font-size:clamp(16px,1.9vh,21px);}
+table.data-table caption{text-align:left;font-size:clamp(13px,1.4vh,15px);color:var(--meta);padding-bottom:8px;caption-side:top;font-weight:700;}
+table.data-table th{background:var(--navy);color:var(--white);text-align:left;padding:12px 16px;font-weight:700;}
+table.data-table td{padding:11px 16px;border-bottom:1px solid var(--hair);text-align:left;}
+table.data-table tr:last-child td{border-bottom:none;}
+.table-wrap{width:100%;display:flex;justify-content:center;overflow-x:auto;}
+
+.chart-wrap{width:100%;max-width:1200px;}
+.chart-wrap svg{width:100%;height:auto;display:block;}
+.svg-lbl{font-family:'Open Sans',sans-serif;}
+
+.two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;width:100%;max-width:1300px;align-items:center;text-align:left;}
+.two-col.stack-mobile{align-items:start;}
+
+.source-note{font-size:clamp(12px,1.3vh,14px);color:var(--meta);max-width:900px;}
+
+.navbtn{
+  position:fixed;bottom:28px;z-index:60;background:var(--navy);color:var(--white);
+  border:none;width:52px;height:52px;border-radius:50%;font-size:22px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+#prevBtn{left:28px;}
+#nextBtn{right:28px;}
+#navIndicator{position:fixed;bottom:42px;right:96px;z-index:60;font-weight:700;color:var(--navy);font-size:15px;background:var(--white);padding:6px 14px;border-radius:16px;border:2px solid var(--navy);}
+
+/* ---- mobile ---- */
+@media (max-width:768px){
+  #sectionbar{padding:8px 12px;gap:2px;}
+  #sectionbar button{font-size:12px;padding:6px 10px;}
+  #deck{height:auto;padding-top:46px;}
+  .slide{position:relative !important;top:0;opacity:1 !important;visibility:visible !important;
+    min-height:auto;padding:36px 22px;border-bottom:8px solid var(--navy);}
+  .slide-inner{gap:16px;}
+  .eyebrow{font-size:12px;}
+  .slide h1.title,.slide h1.title.big{font-size:clamp(26px,7.5vw,34px);}
+  .body-text{font-size:clamp(15px,4.2vw,17px);}
+  .stat .num{font-size:clamp(38px,13vw,60px);}
+  .stat .lbl{font-size:12px;}
+  .cards-grid.n4,.cards-grid.n5{grid-template-columns:1fr 1fr;}
+  table.data-table{font-size:13px;}
+  table.data-table th,table.data-table td{padding:8px 10px;}
+  .two-col{grid-template-columns:1fr;}
+  .navbtn,#navIndicator{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav id="sectionbar"></nav>
+
+<div id="deck">
+
+<!-- SLIDE 1 -->
+<section class="slide">
+  <div class="slide-inner">
+    <div class="eyebrow">Diagnóstico de blog</div>
+    <h1 class="title big">Cargo Care <span class="accent">Services</span></h1>
+    <div class="body-text" style="max-width:600px;color:var(--meta);font-weight:700;">10 de julio de 2026</div>
+    <p class="body-text" style="margin-top:18px;">Revisamos los 50 artículos publicados en el blog: de dónde llega la gente que los encuentra, en qué posición aparecen en Google, y qué tan preparados están para las respuestas de inteligencia artificial. Miramos 16 meses para entender la fuerza real de cada artículo, y los últimos 90 días para ver el estado de hoy.</p>
+    <div class="cards-grid n4" style="margin-top:10px;">
+      <div class="card"><div class="k">Fuentes</div><div class="v">Mapa de artículos del sitio, Google Search Console y Google Analytics.</div></div>
+      <div class="card"><div class="k">Universo</div><div class="v">50 artículos publicados en el blog.</div></div>
+      <div class="card"><div class="k">Ventanas</div><div class="v">16 meses (fuerza y caída) y 90 días (estado actual).</div></div>
+      <div class="card"><div class="k">Fuera de este diagnóstico</div><div class="v">Autoridad de enlaces externos y ventas atribuibles directamente al blog.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide">
+  <div class="slide-inner">
+    <h1 class="title">El blog no tiene un problema de <span class="accent">público</span>.</h1>
+    <p class="body-text">En 16 meses, 188.595 personas vieron un enlace al blog en los resultados de Google. Menos de 500 entraron a leer. El problema no es que falte gente buscando información de bodegas, seguros o inspección de carga: es que casi nadie hace clic cuando la encuentra.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="num">452</div><div class="lbl">Clics · 16 meses</div></div>
+      <div class="stat"><div class="num fx">188.595</div><div class="lbl">Impresiones · 16 meses</div></div>
+      <div class="stat"><div class="num">0,24%</div><div class="lbl">CTR agregado</div></div>
+    </div>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg">
+        <text x="10" y="34" class="svg-lbl" font-size="17" fill="#001E29" font-weight="700">Impresiones</text>
+        <rect x="10" y="46" width="600" height="34" fill="#001E29"/>
+        <text x="622" y="70" class="svg-lbl" font-size="18" fill="#001E29" font-weight="800">188.595</text>
+        <text x="10" y="140" class="svg-lbl" font-size="17" fill="#B81469" font-weight="700">Clics</text>
+        <rect x="10" y="152" width="6" height="34" fill="#EA4099"/>
+        <text x="26" y="176" class="svg-lbl" font-size="18" fill="#B81469" font-weight="800">452 (0,24% de las impresiones)</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Dos artículos generan el <span class="accent">66%</span> de los clics del blog.</h1>
+    <p class="body-text">El artículo sobre <a href="https://cargocareservices.com/types-of-bonded-warehouses/" target="_blank" rel="noopener">bodega aduanera</a> es el más grande de los dos, pero viene cayendo: de un promedio de 38 clics cada 90 días a solo 12 en el último trimestre. El de <a href="https://cargocareservices.com/freight-inspection-vs-ncb-inspection/" target="_blank" rel="noopener">inspección de carga vs NCB</a> se mantiene estable.</p>
+    <div class="two-col stack-mobile">
+      <div class="chart-wrap">
+        <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg">
+          <text x="10" y="26" class="svg-lbl" font-size="15" fill="#001E29" font-weight="700">Clics de "bodega aduanera" cada 90 días</text>
+          <rect x="60" y="70" width="90" height="200" fill="#001E29"/>
+          <text x="105" y="58" text-anchor="middle" class="svg-lbl" font-size="20" font-weight="800" fill="#001E29">38</text>
+          <text x="105" y="300" text-anchor="middle" class="svg-lbl" font-size="14" fill="#000">ritmo esperado</text>
+          <rect x="220" y="207" width="90" height="63" fill="#EA4099"/>
+          <text x="265" y="195" text-anchor="middle" class="svg-lbl" font-size="20" font-weight="800" fill="#B81469">12</text>
+          <text x="265" y="300" text-anchor="middle" class="svg-lbl" font-size="14" fill="#000">últimos 90 días</text>
+          <line x1="30" y1="270" x2="380" y2="270" stroke="#001E29" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Artículo</th><th>Clics 16m</th><th>Clics 90d</th><th>Posición</th><th>Tendencia</th></tr>
+          <tr><td><a href="https://cargocareservices.com/types-of-bonded-warehouses/" target="_blank" rel="noopener">Bodega aduanera</a></td><td>206</td><td>12</td><td>37,8</td><td>Cayendo</td></tr>
+          <tr><td><a href="https://cargocareservices.com/freight-inspection-vs-ncb-inspection/" target="_blank" rel="noopener">Inspección vs NCB</a></td><td>93</td><td>13</td><td>8,7</td><td>Estable</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">19 artículos ya tienen público. Aparecen en la <span class="accent">página 6 a 8</span> de Google.</h1>
+    <p class="body-text">No es un problema de contenido: es de posición. <a href="https://cargocareservices.com/benefits-of-a-temperature-controlled-warehouse/" target="_blank" rel="noopener">Bodega con temperatura controlada</a> y <a href="https://cargocareservices.com/how-much-cargo-insurance-cost/" target="_blank" rel="noopener">costo del seguro de carga</a> —los dos primeros de la tabla— suman más de 37.000 impresiones con 1 clic entre ambos.</p>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="20" class="svg-lbl" font-size="14" fill="#000">Bodega temp. controlada (pos 69,8)</text>
+        <rect x="0" y="28" width="600" height="30" fill="#001E29"/><text x="610" y="50" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">20.094</text>
+        <text x="0" y="76" class="svg-lbl" font-size="14" fill="#000">Costo del seguro (pos 62,8)</text>
+        <rect x="0" y="84" width="514" height="30" fill="#001E29"/><text x="524" y="106" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">17.205</text>
+        <text x="0" y="132" class="svg-lbl" font-size="14" fill="#000">Inspección previa al envío (pos 74,1)</text>
+        <rect x="0" y="140" width="209" height="30" fill="#001E29"/><text x="219" y="162" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">6.997</text>
+        <text x="0" y="188" class="svg-lbl" font-size="14" fill="#000">Cuándo conviene el transloading (pos 58,1)</text>
+        <rect x="0" y="196" width="199" height="30" fill="#001E29"/><text x="209" y="218" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">6.654</text>
+        <text x="0" y="244" class="svg-lbl" font-size="14" fill="#000">Qué es el transloading (pos 71,0)</text>
+        <rect x="0" y="252" width="178" height="30" fill="#001E29"/><text x="188" y="274" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">5.954</text>
+      </svg>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Artículo</th><th>Impresiones 16m</th><th>Posición</th><th>Clics 16m</th></tr>
+        <tr><td><a href="https://cargocareservices.com/benefits-of-a-temperature-controlled-warehouse/" target="_blank" rel="noopener">Bodega con temperatura controlada</a></td><td>20.094</td><td>69,8</td><td>1</td></tr>
+        <tr><td><a href="https://cargocareservices.com/how-much-cargo-insurance-cost/" target="_blank" rel="noopener">Costo del seguro de carga</a></td><td>17.205</td><td>62,8</td><td>0</td></tr>
+        <tr><td><a href="https://cargocareservices.com/how-does-a-pre-shipment-inspection-work/" target="_blank" rel="noopener">Cómo funciona una inspección previa al envío</a></td><td>6.997</td><td>74,1</td><td>0</td></tr>
+        <tr><td><a href="https://cargocareservices.com/when-considering-transload-services-is-important/" target="_blank" rel="noopener">Cuándo conviene el transloading</a></td><td>6.654</td><td>58,1</td><td>0</td></tr>
+        <tr><td><a href="https://cargocareservices.com/what-is-transloading-and-how-can-benefit-your-business/" target="_blank" rel="noopener">Qué es el transloading y sus beneficios</a></td><td>5.954</td><td>71,0</td><td>0</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title"><span class="accent">Warehousing</span> y seguros son la mayor demanda, y la peor posición.</h1>
+    <p class="body-text">Juntos suman casi 80.000 impresiones, casi todas entre la página 5 y 8. Inspección es distinto: mueve menos búsquedas, pero tiene una consulta con posición real ("ncb inspection", posición 5), la única del blog con fuerza genuina en un tema central.</p>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 900 385" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="18" class="svg-lbl" font-size="14" font-weight="700" fill="#000">Warehousing</text>
+        <rect x="0" y="24" width="600" height="26" fill="#001E29"/><text x="610" y="43" class="svg-lbl" font-size="14" font-weight="800" fill="#001E29">44.078</text>
+        <text x="0" y="66" class="svg-lbl" font-size="12" fill="#B81469">Casi todo en posición 50-85</text>
+
+        <text x="0" y="96" class="svg-lbl" font-size="14" font-weight="700" fill="#000">Insurance</text>
+        <rect x="0" y="102" width="469" height="26" fill="#001E29"/><text x="479" y="121" class="svg-lbl" font-size="14" font-weight="800" fill="#001E29">34.439</text>
+        <text x="0" y="144" class="svg-lbl" font-size="12" fill="#B81469">Núcleo del negocio, mal posicionado</text>
+
+        <text x="0" y="174" class="svg-lbl" font-size="14" font-weight="700" fill="#000">Inspection</text>
+        <rect x="0" y="180" width="270" height="26" fill="#001E29"/><text x="280" y="199" class="svg-lbl" font-size="14" font-weight="800" fill="#001E29">19.866</text>
+        <text x="0" y="222" class="svg-lbl" font-size="12" fill="#303D00">Única con posición fuerte real ("ncb inspection", pos 5)</text>
+
+        <text x="0" y="252" class="svg-lbl" font-size="14" font-weight="700" fill="#000">Transloading</text>
+        <rect x="0" y="258" width="206" height="26" fill="#001E29"/><text x="216" y="277" class="svg-lbl" font-size="14" font-weight="800" fill="#001E29">15.119</text>
+        <text x="0" y="300" class="svg-lbl" font-size="12" fill="#B81469">Casi sin presencia en el top 10</text>
+
+        <text x="0" y="330" class="svg-lbl" font-size="14" font-weight="700" fill="#000">Packaging / crating</text>
+        <rect x="0" y="336" width="154" height="26" fill="#001E29"/><text x="164" y="355" class="svg-lbl" font-size="14" font-weight="800" fill="#001E29">11.293</text>
+      </svg>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Territorio</th><th>Impresiones 16m</th><th>Queries</th><th>Lectura</th></tr>
+        <tr><td>Warehousing</td><td>44.078</td><td>529</td><td>Casi todo en posición 50-85</td></tr>
+        <tr><td>Insurance</td><td>34.439</td><td>319</td><td>Núcleo del negocio, mal posicionado</td></tr>
+        <tr><td>Inspection</td><td>19.866</td><td>213</td><td>Única con posición fuerte real (pos 5)</td></tr>
+        <tr><td>Transloading</td><td>15.119</td><td>94</td><td>Casi sin presencia en el top 10</td></tr>
+        <tr><td>Packaging / crating</td><td>11.293</td><td>154</td><td>Oportunidad en "crating materials"</td></tr>
+        <tr><td>Freight / otros</td><td>2.464</td><td>148</td><td>Cola, menor prioridad</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">6 artículos sin presencia en Google, por <span class="accent">dos razones</span> distintas.</h1>
+    <p class="body-text">Cinco están publicados y activos, pero sin enlaces internos que los conecten con el resto del blog: Google nunca los encontró. El sexto sí fue revisado, el 25 de mayo de 2026, y descartado por su título y enfoque publicitario.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Artículo</th><th>Estado</th><th>Motivo</th></tr>
+        <tr><td><a href="https://cargocareservices.com/usa-b2b-fulfillment/" target="_blank" rel="noopener">Fulfillment B2B en EE.UU.</a></td><td>Nunca rastreado</td><td>Sin enlaces internos</td></tr>
+        <tr><td><a href="https://cargocareservices.com/how-to-optimize-packaging-to-protect-your-goods/" target="_blank" rel="noopener">Cómo optimizar el empaque</a></td><td>Nunca rastreado</td><td>Sin enlaces internos</td></tr>
+        <tr><td><a href="https://cargocareservices.com/supply-chain-challenges-for-2021/" target="_blank" rel="noopener">Retos de la cadena de suministro en 2021</a></td><td>Nunca rastreado</td><td>Sin enlaces internos, tema vencido</td></tr>
+        <tr><td><a href="https://cargocareservices.com/2022-top-trends-in-warehousing/" target="_blank" rel="noopener">Tendencias de bodegaje 2022</a></td><td>Nunca rastreado</td><td>Sin enlaces internos, tema vencido</td></tr>
+        <tr><td><a href="https://cargocareservices.com/the-key-differences-between-b2b-and-b2c-fulfillment-why-expertise-matters/" target="_blank" rel="noopener">Diferencias entre fulfillment B2B y B2C</a></td><td>Nunca rastreado</td><td>Sin enlaces internos</td></tr>
+        <tr><td><a href="https://cargocareservices.com/7-reasons-you-will-love-about-cargo-insurance/" target="_blank" rel="noopener">7 razones para amar el seguro de carga</a></td><td>Rastreado, no indexado</td><td>Descartado por título y enfoque</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Tres artículos compiten por las mismas <span class="accent">cinco búsquedas</span> de seguro y reclamos.</h1>
+    <p class="body-text"><a href="https://cargocareservices.com/simple-guide-to-cargo-claims/" target="_blank" rel="noopener">Guía simple de reclamos de carga</a>, <a href="https://cargocareservices.com/cargo-insurance-claim-how-you-get-your-money-back/" target="_blank" rel="noopener">cómo recuperar tu dinero en un reclamo</a> y <a href="https://cargocareservices.com/what-is-cargo-insurance-and-does-my-shipment-really-need-it/" target="_blank" rel="noopener">qué es el seguro de carga</a> se reparten 9.805 impresiones sin que ninguno gane posición: los tres están entre la página 4 y 9.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <caption>Canónica sugerida: Guía simple de reclamos de carga</caption>
+        <tr><th>Búsqueda</th><th>Impresiones en juego</th></tr>
+        <tr><td>cargo insurance claim</td><td>3.930</td></tr>
+        <tr><td>what is cargo insurance</td><td>2.711</td></tr>
+        <tr><td>cargo insurance</td><td>1.644</td></tr>
+        <tr><td>cargo claims</td><td>1.053</td></tr>
+        <tr><td>cargo claim</td><td>467</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>9.805</strong></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">7 artículos están a un paso del <span class="accent">top 10</span>, con demanda ya activa.</h1>
+    <p class="body-text"><a href="https://cargocareservices.com/on-site-packaging-and-crating-is-it-better-for-you/" target="_blank" rel="noopener">Empaque y crating en sitio</a> aparece en tres búsquedas de crating: es el artículo con más potencial inmediato del blog. La más limpia es "crating materials": 442 impresiones, posición 12, cero clics.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Búsqueda</th><th>Artículo</th><th>Impresiones</th><th>Posición</th><th>CTR</th></tr>
+        <tr><td>crating materials</td><td><a href="https://cargocareservices.com/on-site-packaging-and-crating-is-it-better-for-you/" target="_blank" rel="noopener">Empaque y crating en sitio</a></td><td>442</td><td>12,4</td><td>0%</td></tr>
+        <tr><td>container loading inspection</td><td><a href="https://cargocareservices.com/container-loading-inspection-why-is-it-important/" target="_blank" rel="noopener">Inspección de carga en contenedor</a></td><td>133</td><td>19,4</td><td>0%</td></tr>
+        <tr><td>cargo inspector</td><td><a href="https://cargocareservices.com/what-does-a-freight-cargo-inspector-do/" target="_blank" rel="noopener">Qué hace un inspector de carga</a></td><td>95</td><td>15,1</td><td>0%</td></tr>
+        <tr><td>crating equipment</td><td><a href="https://cargocareservices.com/best-practices-for-equipment-packaging-and-crating/" target="_blank" rel="noopener">Buenas prácticas de empaque y crating</a></td><td>74</td><td>15,7</td><td>0%</td></tr>
+        <tr><td>public warehousing miami</td><td><a href="https://cargocareservices.com/8-reasons-to-consider-miami-warehousing/" target="_blank" rel="noopener">8 razones para bodegaje en Miami</a></td><td>71</td><td>15,7</td><td>0%</td></tr>
+        <tr><td>wooden pallet policy</td><td><a href="https://cargocareservices.com/what-are-the-requirements-to-export-with-wooden-packaging/" target="_blank" rel="noopener">Requisitos para exportar con empaque de madera</a></td><td>53</td><td>18,9</td><td>0%</td></tr>
+        <tr><td>cfs bonded warehouse</td><td><a href="https://cargocareservices.com/types-of-bonded-warehouses/" target="_blank" rel="noopener">Tipos de bodega aduanera</a></td><td>58</td><td>12,7</td><td>1,7%</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 9 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">El blog ya recibe tráfico de <span class="accent">IA</span>, sin estar preparado para ella.</h1>
+    <p class="body-text">127 sesiones en 16 meses llegan desde ChatGPT, Perplexity, Claude y Gemini —ya supera a Yahoo y LinkedIn como fuente—. Ninguna página tiene formato de pregunta-respuesta, ninguna muestra fecha de publicación, y casi ninguna cita cifras o fuentes. <a href="https://cargocareservices.com/types-of-bonded-warehouses/" target="_blank" rel="noopener">Bodega aduanera</a>, <a href="https://cargocareservices.com/freight-inspection-vs-ncb-inspection/" target="_blank" rel="noopener">inspección vs NCB</a> y <a href="https://cargocareservices.com/how-does-a-pre-shipment-inspection-work/" target="_blank" rel="noopener">cómo funciona una inspección previa al envío</a> son la excepción: citan normativa real.</p>
+    <div class="two-col stack-mobile">
+      <div class="table-wrap">
+        <table class="data-table">
+          <tr><th>Fuente de IA</th><th>Sesiones 16m</th></tr>
+          <tr><td>chatgpt.com</td><td>92</td></tr>
+          <tr><td>perplexity.ai</td><td>14</td></tr>
+          <tr><td>claude.ai</td><td>11</td></tr>
+          <tr><td>gemini.google.com</td><td>6</td></tr>
+          <tr><td>copilot (microsoft)</td><td>3</td></tr>
+          <tr><td>doubao.com</td><td>1</td></tr>
+        </table>
+      </div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="24" class="svg-lbl" font-size="15" font-weight="700" fill="#001E29">Total de sesiones del sitio</text>
+          <rect x="0" y="34" width="440" height="30" fill="#001E29"/><text x="450" y="56" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">~24.400</text>
+          <text x="0" y="112" class="svg-lbl" font-size="15" font-weight="700" fill="#B81469">Sesiones desde asistentes de IA</text>
+          <rect x="0" y="122" width="6" height="30" fill="#EA4099"/><text x="20" y="144" class="svg-lbl" font-size="15" font-weight="800" fill="#B81469">127 (0,5%)</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Cinco hallazgos, una misma causa: demanda que no se está <span class="accent">capturando</span>.</h1>
+    <div class="cards-grid n5">
+      <div class="card"><div class="k">Riesgo</div><div class="v">Dos artículos sostienen el 66% del tráfico, y el más grande viene cayendo.</div></div>
+      <div class="card"><div class="k">Oportunidad</div><div class="v">19 artículos ya tienen demanda esperando en página 6 a 8.</div></div>
+      <div class="card"><div class="k">Indexación</div><div class="v">6 artículos no llegan a esa demanda porque Google no los ve.</div></div>
+      <div class="card"><div class="k">Canibalización</div><div class="v">El tema más valioso del negocio está partido en 3 artículos que compiten entre sí.</div></div>
+      <div class="card"><div class="k">IA</div><div class="v">El blog ya recibe tráfico de IA sin estar preparado para capturarlo.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Primero, subir de posición lo que ya tiene <span class="accent">demanda</span>.</h1>
+    <p class="body-text">Empezar por los cinco dormidos de mayor impresión y las oportunidades 11-20 ya identificadas, y resolver en la misma pasada el nudo de seguros y reclamos consolidando en una sola pieza canónica.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Artículo</th><th>Acción propuesta</th></tr>
+        <tr><td><a href="https://cargocareservices.com/benefits-of-a-temperature-controlled-warehouse/" target="_blank" rel="noopener">Bodega con temperatura controlada</a></td><td>Reforzar contenido y enlace interno para subir de posición 70 a página 1</td></tr>
+        <tr><td><a href="https://cargocareservices.com/how-much-cargo-insurance-cost/" target="_blank" rel="noopener">Costo del seguro de carga</a></td><td>Agregar un rango de precio real: hoy no responde lo que promete el título</td></tr>
+        <tr><td><a href="https://cargocareservices.com/on-site-packaging-and-crating-is-it-better-for-you/" target="_blank" rel="noopener">Empaque y crating en sitio</a></td><td>Agregar sección de materiales para capturar "crating materials" (pos 12)</td></tr>
+        <tr><td>Nudo seguro y reclamos (3 artículos)</td><td>Consolidar en <a href="https://cargocareservices.com/simple-guide-to-cargo-claims/" target="_blank" rel="noopener">guía simple de reclamos</a> como canónica; fusionar o redirigir las otras dos</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 12 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Segundo, conectar lo que ya existe pero <span class="accent">Google no ve</span>.</h1>
+    <p class="body-text">Enlazar internamente los cinco artículos huérfanos desde páginas con autoridad del blog. Retirar los dos con tema vencido, y reescribir título y enfoque del sexto para que Google lo indexe.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Artículo</th><th>Acción</th></tr>
+        <tr><td><a href="https://cargocareservices.com/usa-b2b-fulfillment/" target="_blank" rel="noopener">Fulfillment B2B en EE.UU.</a></td><td>Enlazar desde páginas con autoridad</td></tr>
+        <tr><td><a href="https://cargocareservices.com/how-to-optimize-packaging-to-protect-your-goods/" target="_blank" rel="noopener">Cómo optimizar el empaque</a></td><td>Enlazar desde páginas con autoridad</td></tr>
+        <tr><td><a href="https://cargocareservices.com/the-key-differences-between-b2b-and-b2c-fulfillment-why-expertise-matters/" target="_blank" rel="noopener">Diferencias entre fulfillment B2B y B2C</a></td><td>Enlazar desde páginas con autoridad</td></tr>
+        <tr><td><a href="https://cargocareservices.com/supply-chain-challenges-for-2021/" target="_blank" rel="noopener">Retos de la cadena de suministro 2021</a></td><td>Retirar, tema vencido</td></tr>
+        <tr><td><a href="https://cargocareservices.com/2022-top-trends-in-warehousing/" target="_blank" rel="noopener">Tendencias de bodegaje 2022</a></td><td>Retirar, tema vencido</td></tr>
+        <tr><td><a href="https://cargocareservices.com/7-reasons-you-will-love-about-cargo-insurance/" target="_blank" rel="noopener">7 razones para amar el seguro de carga</a></td><td>Reescribir título y enfoque</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 13 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Tercero, preparar el blog para las respuestas de <span class="accent">inteligencia artificial</span>.</h1>
+    <p class="body-text">Agregar formato de pregunta y respuesta en los artículos que ya responden un procedimiento o una comparación, mostrar fecha de publicación y actualización, y sumar cifras y fuentes donde hoy solo hay afirmaciones genéricas.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <tr><th>Carencia</th><th>Dónde se ve más</th><th>Acción</th></tr>
+        <tr><td>Sin formato pregunta-respuesta</td><td>Guías y comparativas ("vs", "cómo")</td><td>Agregar marcado de preguntas y respuestas</td></tr>
+        <tr><td>Sin fecha visible</td><td>Las 50 páginas del blog</td><td>Mostrar fecha de publicación y actualización</td></tr>
+        <tr><td>Sin cifras ni fuentes</td><td><a href="https://cargocareservices.com/simple-guide-to-cargo-claims/" target="_blank" rel="noopener">Guía simple de reclamos</a>, <a href="https://cargocareservices.com/what-does-a-freight-cargo-inspector-do/" target="_blank" rel="noopener">qué hace un inspector de carga</a></td><td>Sumar cifras, rangos y referencias verificables</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 14 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Si subimos estos 12 artículos a la mitad-alta de la primera página, esto es lo que <span class="accent">ganaríamos</span>.</h1>
+    <p class="body-text">Hoy, los cinco dormidos principales y las siete oportunidades 11-20 generan casi cero clics por trimestre a pesar de 8.763 impresiones. Aplicando la tasa de clic promedio que reporta la industria para las posiciones 4 a 8, subir estos artículos representaría entre 180 y 630 clics adicionales cada 90 días. Es una estimación con base en un estudio externo, no una garantía.</p>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="20" class="svg-lbl" font-size="14" fill="#000">Hoy (clics reales · 90 días)</text>
+        <rect x="0" y="28" width="6" height="30" fill="#001E29"/><text x="20" y="50" class="svg-lbl" font-size="15" font-weight="800" fill="#001E29">~1</text>
+        <text x="0" y="94" class="svg-lbl" font-size="14" fill="#000">Estimado mínimo (posición ~8, CTR 2,1%)</text>
+        <rect x="0" y="102" width="171" height="30" fill="#EA4099"/><text x="181" y="124" class="svg-lbl" font-size="15" font-weight="800" fill="#B81469">180</text>
+        <text x="0" y="168" class="svg-lbl" font-size="14" fill="#000">Estimado máximo (posición ~4, CTR 7,2%)</text>
+        <rect x="0" y="176" width="600" height="30" fill="#B81469"/><text x="610" y="198" class="svg-lbl" font-size="15" font-weight="800" fill="#B81469">630</text>
+      </svg>
+    </div>
+    <p class="source-note">Referencia de tasa de clic por posición: First Page Sage, "Google Click-Through Rates (CTRs) by Ranking Position", 2026 (meta-análisis sobre Backlinko, Sistrix y Wordstream).</p>
+  </div>
+</section>
+
+<!-- SLIDE 15 -->
+<section class="slide">
+  <div class="slide-inner wide">
+    <h1 class="title">Cómo leer el <span class="accent">archivo de datos</span> completo.</h1>
+    <div class="two-col stack-mobile">
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption>Columnas del CSV</caption>
+          <tr><th>Columna</th><th>Qué significa</th></tr>
+          <tr><td>url</td><td>Dirección del artículo</td></tr>
+          <tr><td>tier</td><td>Categoría de desempeño (ver tabla)</td></tr>
+          <tr><td>lastmod</td><td>Última modificación registrada (no siempre la fecha real de publicación)</td></tr>
+          <tr><td>epoca</td><td>Reciente o legacy, según lastmod (lectura limitada)</td></tr>
+          <tr><td>decay</td><td>1 si perdió tracción reciente, 0 si no</td></tr>
+          <tr><td>estacional</td><td>1 si el tema tiene año o evento marcado, 0 si no</td></tr>
+          <tr><td>clics_16m / clics_90d</td><td>Clics desde Google en cada ventana</td></tr>
+          <tr><td>impresiones_16m / impresiones_90d</td><td>Veces que apareció en resultados de Google</td></tr>
+          <tr><td>ctr_16m</td><td>% de esas impresiones que se hicieron clic</td></tr>
+          <tr><td>posicion_16m</td><td>Posición promedio (10 = página 1)</td></tr>
+          <tr><td>vistas / sesiones / engagement</td><td>Datos de Analytics, incluyen tráfico no solo de Google</td></tr>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <caption>Categorías de tier</caption>
+          <tr><th>Tier</th><th>Regla</th><th>Conteo</th></tr>
+          <tr><td>Estrella</td><td>Clics ≥ 30</td><td>2</td></tr>
+          <tr><td>Sólido</td><td>Clics ≥ 10</td><td>6</td></tr>
+          <tr><td>Dormido</td><td>Impresiones ≥ 300 y clics ≤ 5</td><td>19</td></tr>
+          <tr><td>Débil</td><td>Resto</td><td>8</td></tr>
+          <tr><td>Muerto</td><td>Sin clics ni vistas</td><td>15</td></tr>
+          <tr><td>Fantasma</td><td>Sin presencia</td><td>0</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<button class="navbtn" id="prevBtn">‹</button>
+<button class="navbtn" id="nextBtn">›</button>
+<div id="navIndicator">1 / 15</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const sections = [
+  {name:'Qué hicimos', start:0},
+  {name:'Qué encontramos', start:1},
+  {name:'Qué concluimos', start:9},
+  {name:'Qué proponemos', start:10},
+  {name:'Qué lograríamos', start:13},
+  {name:'Glosario', start:14}
+];
+let current = 0;
+
+const bar = document.getElementById('sectionbar');
+sections.forEach((s,i)=>{
+  const btn = document.createElement('button');
+  btn.textContent = s.name;
+  btn.addEventListener('click', ()=> goTo(s.start));
+  bar.appendChild(btn);
+});
+
+function render(){
+  slides.forEach((sl,i)=> sl.classList.toggle('active', i===current));
+  document.getElementById('navIndicator').textContent = (current+1)+' / '+slides.length;
+  let activeSectionIdx = 0;
+  sections.forEach((s,i)=>{ if(current >= s.start) activeSectionIdx = i; });
+  Array.from(bar.children).forEach((btn,i)=> btn.classList.toggle('active', i===activeSectionIdx));
+}
+function goTo(i){
+  current = Math.max(0, Math.min(slides.length-1, i));
+  render();
+}
+document.getElementById('prevBtn').addEventListener('click', ()=> goTo(current-1));
+document.getElementById('nextBtn').addEventListener('click', ()=> goTo(current+1));
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') goTo(current+1);
+  if(e.key==='ArrowLeft') goTo(current-1);
+});
+render();
+</script>
+
+</body>
+</html>
