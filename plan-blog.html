@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan del blog de Cadena — delaossa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --azul:#001E29; --lima:#C8FF00; --fucsia:#EA4099;
+    --blanco:#FFFFFF; --negro:#000000; --fucsia-dark:#B81469;
+    --tinta:#0d0d0d; --suave:rgba(0,0,0,.10); --suave2:rgba(0,0,0,.045);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--azul);}
+  body{font-family:'Open Sans',sans-serif;color:var(--tinta);}
+  .deck{position:relative;}
+  .slide{
+    display:none; min-height:100vh; width:100%;
+    padding:clamp(30px,4.4vh,50px) clamp(30px,5.6vw,74px);
+    flex-direction:column; justify-content:center;
+    background:var(--blanco);
+  }
+  .slide.active{display:flex;}
+  .inner{max-width:1200px;width:100%;margin:0 auto;}
+  h1.title{
+    font-family:'Playfair Display',serif;font-weight:900;
+    font-size:clamp(30px,5vh,54px);line-height:1.06;letter-spacing:-.01em;
+    margin-bottom:clamp(12px,2.2vh,22px);color:var(--azul);
+  }
+  h1.title .mark-l{background:var(--lima);color:var(--negro);padding:0 .14em;border-radius:2px;}
+  .lead{font-size:clamp(17px,2.3vh,23px);line-height:1.5;max-width:46ch;color:#222;}
+  .note{font-size:clamp(11px,1.55vh,15px);color:rgba(0,0,0,.55);margin-top:clamp(8px,1.5vh,17px);}
+  p.body{font-size:clamp(14px,1.9vh,20px);line-height:1.48;max-width:66ch;margin-bottom:.55em;color:#1c1c1c;}
+  .slide--dark{background:var(--azul);color:var(--blanco);}
+  .slide--dark h1.title{color:var(--blanco);}
+  .slide--dark .lead{color:rgba(255,255,255,.82);}
+  .accent-lima{color:var(--lima);}
+  .brand{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(15px,1.9vh,19px);margin-top:clamp(20px,3.6vh,40px);}
+  .brand .dot{color:var(--lima);}
+  .kicker{font-size:clamp(10px,1.4vh,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--fucsia);font-weight:700;margin-bottom:clamp(7px,1.4vh,13px);}
+  .slide--dark .kicker{color:var(--lima);}
+
+  table{width:100%;border-collapse:collapse;font-size:clamp(11px,1.5vh,16px);margin-top:clamp(5px,1vh,10px);}
+  thead th{background:var(--azul);color:#fff;text-align:left;padding:.45em .65em;font-weight:600;font-size:clamp(10px,1.32vh,14px);}
+  tbody td{padding:.36em .65em;border-bottom:1px solid var(--suave);vertical-align:top;}
+  tbody tr:nth-child(even){background:var(--suave2);}
+  .slug{font-size:.94em;color:#16323d;word-break:break-word;overflow-wrap:anywhere;}
+  td.eje{font-weight:700;color:var(--azul);white-space:nowrap;font-size:.96em;}
+  td.cant{text-align:center;font-weight:700;color:var(--fucsia-dark);white-space:nowrap;}
+
+  .tag{display:inline-block;font-size:clamp(9px,1.2vh,12px);font-weight:700;padding:.12em .45em;border-radius:3px;white-space:nowrap;vertical-align:.06em;}
+  .t-mad{background:var(--azul);color:#fff;}
+  .t-sat{background:rgba(0,0,0,.10);color:var(--azul);}
+  .t-eje{background:var(--lima);color:var(--negro);}
+
+  .ejes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(9px,1.4vw,18px);margin-top:clamp(7px,1.4vh,14px);}
+  .ejecard{border-top:4px solid var(--lima);background:var(--suave2);padding:clamp(8px,1.3vh,13px) clamp(9px,1.1vw,15px);}
+  .ejecard h3{font-family:'Playfair Display',serif;font-size:clamp(14px,2vh,21px);color:var(--azul);margin-bottom:.22em;line-height:1.14;}
+  .ejecard p{font-size:clamp(10px,1.4vh,14px);line-height:1.32;color:#333;}
+
+  .pull{border-left:6px solid var(--lima);padding:clamp(8px,1.5vh,14px) clamp(12px,1.6vw,20px);background:rgba(200,255,0,.10);font-size:clamp(14px,1.95vh,20px);line-height:1.4;margin-top:clamp(10px,1.8vh,18px);max-width:64ch;}
+
+  .cols2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.2vw,32px);margin-top:clamp(6px,1.2vh,12px);}
+  .lista h3{font-family:'Playfair Display',serif;font-size:clamp(16px,2.3vh,25px);color:var(--azul);margin-bottom:.3em;}
+  .lista h3 em{font-style:normal;font-size:.62em;color:var(--fucsia-dark);font-family:'Open Sans';font-weight:700;}
+  .lista ul{list-style:none;display:grid;gap:.28em;}
+  .lista li{font-size:clamp(11px,1.55vh,16px);line-height:1.34;padding-left:.9em;position:relative;}
+  .lista li::before{content:"";position:absolute;left:0;top:.52em;width:.34em;height:.34em;background:var(--fucsia);border-radius:50%;}
+  .lista li.madre::before{background:var(--lima);border:1px solid var(--azul);}
+
+  .mesgrid{display:grid;gap:clamp(8px,1.4vh,14px);margin-top:clamp(5px,1vh,10px);}
+  .bloque{border-left:5px solid var(--azul);padding-left:clamp(10px,1.2vw,16px);}
+  .bloque.crear{border-left-color:var(--lima);}
+  .bloque.opt{border-left-color:var(--fucsia);}
+  .bloque h4{font-size:clamp(10px,1.36vh,13px);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--azul);margin-bottom:.32em;}
+  .bloque ul{list-style:none;display:grid;gap:.22em;}
+  .bloque li{font-size:clamp(11px,1.52vh,16px);line-height:1.32;padding-left:.9em;position:relative;}
+  .bloque li::before{content:"";position:absolute;left:0;top:.52em;width:.32em;height:.32em;background:var(--azul);border-radius:50%;}
+  .bloque.crear li::before{background:var(--lima);border:1px solid var(--azul);}
+  .bloque.opt li::before{background:var(--fucsia);}
+  .bloque li .u{color:#16323d;word-break:break-word;overflow-wrap:anywhere;}
+  .bloque li .qh{color:rgba(0,0,0,.62);}
+
+  .nav-btn{position:fixed;top:50%;transform:translateY(-50%);z-index:30;background:none;border:none;color:var(--azul);font-size:30px;cursor:pointer;padding:16px 9px;opacity:.4;transition:opacity .2s;}
+  .nav-btn:hover{opacity:1;}
+  .nav-prev{left:5px;} .nav-next{right:5px;}
+  .indicator{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:30;font-size:12px;letter-spacing:.12em;color:var(--azul);background:rgba(255,255,255,.75);padding:4px 12px;border-radius:20px;font-weight:600;}
+
+  @media (max-width:768px){
+    .slide{display:flex!important;min-height:auto;padding:40px 20px;border-bottom:1px solid rgba(0,0,0,.08);}
+    h1.title{font-size:clamp(24px,7.2vw,36px);}
+    .lead{font-size:clamp(15px,4.4vw,18px);}
+    p.body{font-size:clamp(14px,4vw,17px);}
+    table{font-size:clamp(11px,3.1vw,14px);table-layout:fixed;}
+    td,th,.slug{overflow-wrap:anywhere;word-break:break-word;}
+    thead th,tbody td{padding:.38em .3em;}
+    .ejes,.cols2{grid-template-columns:1fr;}
+    .bloque li,.lista li{font-size:clamp(12px,3.6vw,15px);}
+    .deck,.slide,.inner{overflow-x:hidden;}
+    .nav-btn,.indicator{display:none!important;}
+  }
+  @media print{
+    .slide{display:flex!important;page-break-after:always;min-height:100vh;}
+    .nav-btn,.indicator{display:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- 1 PORTADA -->
+  <section class="slide slide--dark active">
+    <div class="inner">
+      <div class="kicker">Plan de blog · Cadena</div>
+      <h1 class="title">Doce meses,<br>seis <span class="accent-lima">ejes</span>, un orden</h1>
+      <p class="lead">Qué se crea, qué se corrige y qué se ejecuta cada mes, de agosto de 2026 a julio de 2027.</p>
+      <div class="brand">delaossa<span class="dot">.co</span> · agosto 2026</div>
+    </div>
+  </section>
+
+  <!-- 2 EJES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Lo primero</div>
+      <h1 class="title">El blog se reorganiza en seis <span class="mark-l">ejes</span></h1>
+      <p class="body">Hoy el blog se ordena por formato: blog, podcast, infografía. Para Google eso no significa nada. Se reordena por tema: cada eje se crea como una categoría real del blog, con su página de categoría, un artículo madre que cubre el tema completo y artículos satélite que resuelven una duda cada uno, todos enlazados al madre.</p>
+      <div class="ejes">
+        <div class="ejecard"><h3>Facturación electrónica</h3><p>Obligados a facturar, nómina electrónica, contingencia, declaración de renta, proveedor autorizado</p></div>
+        <div class="ejecard"><h3>POS y documentos equivalentes</h3><p>Tiquete POS, los 13 documentos equivalentes, límite de 5 UVT</p></div>
+        <div class="ejecard"><h3>Recepción de facturas</h3><p>Acuse de recibo, aceptación, RADIAN, título valor, factoring, documento soporte</p></div>
+        <div class="ejecard"><h3>Verificación en listas</h3><p>Listas restrictivas, debida diligencia, SARLAFT en transporte, matriz de riesgo</p></div>
+        <div class="ejecard"><h3>Digital Trust</h3><p>Verificación de identidad, certificados, firma, notificación certificada, fraude</p></div>
+        <div class="ejecard"><h3>Tarjetas y soportes seguros</h3><p>Carnetización, carnés PVC, tarjetas de valor, fidelización, falsificación</p></div>
+      </div>
+      <div class="pull">Primera tarea del mes 1: crear estas seis categorías en el blog y asignarle una categoría a cada artículo que se conserva. Sin eso, nada de lo que sigue funciona.</div>
+    </div>
+  </section>
+
+  <!-- 3 UNIFICACIONES -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se corrige · 1 de 4</div>
+      <h1 class="title">Nueve grupos de artículos que <span class="mark-l">se fusionan</span></h1>
+      <p class="body">En cada grupo hay varios artículos peleando por la misma búsqueda. Se elige uno, se le pasa el contenido útil de los demás, y los demás se redirigen hacia él (redirección 301) para no perder lo ganado.</p>
+      <table>
+        <thead><tr><th style="width:38%">Artículo que se queda</th><th style="width:44%">Artículos que se fusionan en él y se redirigen</th><th>Eje</th></tr></thead>
+        <tbody>
+          <tr><td class="slug">/blog/comienza-a-implementar-el-documento-equivalente/<br>pasa a ser el artículo madre del eje</td><td class="slug">/blog/cambio-de-fechas-en-documento-equivalente/ <em>(1 artículo)</em></td><td class="eje">POS</td></tr>
+          <tr><td class="slug">/blog/documento-equivalente-para-servicios-publicos/</td><td class="slug">/blog/documento-equivalente-para-servicios-publicos-2/ <em>(1 artículo, es copia exacta)</em></td><td class="eje">POS</td></tr>
+          <tr><td class="slug">/blog/facturacion-electronica-pos/</td><td class="slug">/blog/1-de-junio-plazo-para-la-factura-electronica-pos/<br>/blog/factura-electronica-pos-para-establecimientos/ <em>(2 artículos)</em></td><td class="eje">POS</td></tr>
+          <tr><td class="slug">/blog/factura-electronica-como-titulo-valor-todo-lo-que-debes-saber/</td><td class="slug">/blog/recepcion-y-eventos-titulo-valor/<br>/blog/guia-para-entender-radian-y-titulo-valor-sin-enredos/ <em>(2 artículos)</em></td><td class="eje">Recepción</td></tr>
+          <tr><td class="slug">/blog/que-es-el-factoring-electronico-y-por-que-puede-ser-un-impulso-para-las-finanzas-de-mi-empresa/</td><td class="slug">/blog/factoring-con-factura-electronica/<br>/blog/pagar-la-prima-sin-endeudarse-factoring-cadena/ <em>(2 artículos)</em></td><td class="eje">Recepción</td></tr>
+          <tr><td class="slug">/blog/sarlaft-para-el-sector-transporte-2/<br>sí, el que termina en “-2”: es el que tiene 274 clics</td><td class="slug">/blog/sarlaft-para-el-sector-transporte/ <em>(1 artículo, tiene 6 clics)</em></td><td class="eje">Verificación</td></tr>
+          <tr><td class="slug">/blog/protegeatuempresadelfraude/</td><td class="slug">/blog/proteccion-contra-el-fraude-para-empresas/<br>/blog/ecosistemas-antifraude/ <em>(2 artículos)</em></td><td class="eje">Digital Trust</td></tr>
+          <tr><td class="slug">/blog/programa-de-incentivos-un-aliado-para-aumentar-la-productividad/</td><td class="slug">/blog/incentivos-con-proposito-motivacion-y-resulta/<br>/blog/motivar-y-reconocer-claves-el-exito-empresarial/ <em>(2 artículos)</em></td><td class="eje">Sin eje</td></tr>
+          <tr><td class="slug">/blog/la-gestion-documental-ha-evolucionado/</td><td class="slug">/blog/gestion-documental-en-la-era-de-la-inmediatez/ <em>(1 artículo)</em></td><td class="eje">Digital Trust</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Total: 9 artículos se conservan y 13 se fusionan y redirigen hacia ellos.</p>
+    </div>
+  </section>
+
+  <!-- 4 ACTUALIZAR 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se corrige · 2 de 4</div>
+      <h1 class="title">Artículos a <span class="mark-l">actualizar</span>: facturación, POS y recepción</h1>
+      <table>
+        <thead><tr><th style="width:46%">Artículo</th><th>Qué se le hace y por qué</th></tr></thead>
+        <tbody>
+          <tr><td class="slug">/blog/recepcion-de-factura-electronica/</td><td>Corregir un dato falso: dice que no hacer el acuse de recibo te hace perder el IVA descontable. La Sentencia 29509 del Consejo de Estado, de julio de 2025, anuló los conceptos de la DIAN que lo exigían. Reemplazar ese argumento por el soporte de costos en renta y la aceptación tácita</td></tr>
+          <tr><td class="slug">/blog/documento-soporte-para-no-obligados-a-factuar/</td><td>Reescribir título y descripción. Aparece 40.508 veces en Google y solo 5 de cada 1.000 personas hacen clic: es la mayor fuga del blog. No cambiar la dirección aunque tenga el error “factuar”: cambiarla borra lo ganado</td></tr>
+          <tr><td class="slug">/blog/que-tiene-que-ver-la-factura-electronica-con-la-declaracion-de-renta/</td><td>Actualizar cifras y fecha. Enfocarlo solo en para qué sirve la factura electrónica en la declaración, y enlazarlo con /blog/declaracion-de-renta-con-facturacion-electronica/</td></tr>
+          <tr><td class="slug">/blog/declaracion-de-renta-con-facturacion-electronica/</td><td>Actualizar cifras y fecha. Enfocarlo solo en cómo declarar renta usando las facturas, y enlazarlo con el artículo de arriba. Hoy los dos pelean por la misma búsqueda</td></tr>
+          <tr><td class="slug">/blog/activar-contingencia-en-facturacion-electronica/</td><td>Reescribir título y descripción. Aparece 19.306 veces con 5 clics de cada 1.000</td></tr>
+          <tr><td class="slug">/blog/facturacion-electronica-efectividad-y-eficiencia/</td><td>Actualizar datos y fecha: viene perdiendo tráfico y su contenido es de 2022</td></tr>
+          <tr><td class="slug">/blog/facturacion-electronica-con-nuevos-ajustes-dian/</td><td>Actualizar: los ajustes de la DIAN que menciona ya fueron reemplazados por otros</td></tr>
+          <tr><td class="slug">/blog/facturacion-electronica-en-el-2025/</td><td>Quitar “2025” del título y actualizar a la normativa de 2026, para que no vuelva a envejecer cada enero</td></tr>
+          <tr><td class="slug">/blog/documento-equivalente-para-servicios-publicos/</td><td>Ampliar: es el artículo con más clics del eje POS (323). Añadir los requisitos de la Resolución 000165 de 2023</td></tr>
+          <tr><td class="slug">/blog/recepcion-factura-electronica-para-proveedores/</td><td>Reescribir título y descripción y reorientarlo: hoy le habla a quien recibe facturas, y debe hablarle al proveedor que tiene que emitirlas hacia una empresa grande. Aparece 9.124 veces con 3 clics de cada 1.000</td></tr>
+          <tr><td class="slug">/blog/automatizar-la-recepcion-de-facturas/</td><td>Actualizar. Se conserva porque es el único artículo del blog sobre automatizar cuentas por pagar</td></tr>
+          <tr><td class="slug">/blog/trazabilidad-factura-electronica/</td><td>Actualizar. Se conserva porque es el único artículo del blog sobre trazabilidad de facturas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5 ACTUALIZAR 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se corrige · 3 de 4</div>
+      <h1 class="title">Artículos a <span class="mark-l">actualizar</span>: verificación, Digital Trust y Tarjetas</h1>
+      <table>
+        <thead><tr><th style="width:46%">Artículo</th><th>Qué se le hace y por qué</th></tr></thead>
+        <tbody>
+          <tr><td class="slug">/blog/lo-que-toda-organizacion-debe-sabe-firma-digital/</td><td>Primero averiguar por qué cayó: perdió el 94% de sus apariciones en Google desde marzo de 2026. Después reescribirlo. Aparece 19.711 veces con 4 clics de cada 1.000</td></tr>
+          <tr><td class="slug">/blog/cdn-trust-para-procesos-criticos-empresariales/</td><td>Convertirlo en el artículo madre del eje Digital Trust, con el título “El ciclo de confianza digital: verificar, certificar, firmar y notificar”</td></tr>
+          <tr><td class="slug">/blog/sarlaft-para-el-sector-transporte-2/</td><td>Actualizar los plazos: el vencimiento quedó en el 6 de mayo de 2026 y el primer reporte en el 10 de agosto de 2026. Es el artículo con más clics del eje (274)</td></tr>
+          <tr><td class="slug">/blog/sarlaft-y-ptee-para-el-sector-transporte/</td><td>Actualizar porque cambió la norma: la Circular 100-000020, de julio de 2026, fusionó SAGRILAFT y PTEE en un solo sistema. El artículo los presenta como dos sistemas separados</td></tr>
+          <tr><td class="slug">/blog/actualizaciones-del-ptee-y-sarlaft-segun-la-supertransporte/</td><td>Actualizar por la misma razón: ya no son dos sistemas, es uno</td></tr>
+          <tr><td class="slug">/blog/programa-de-transparencia-y-etica-empresarial/</td><td>Actualizar porque el PTEE dejó de existir por separado, y reescribir el título: aparece 7.889 veces con 6 clics de cada 1.000</td></tr>
+          <tr><td class="slug">/blog/superfinanciera-anuncia-cambios-sarlaft/</td><td>Actualizar: los cambios que anuncia ya fueron reemplazados por normas posteriores</td></tr>
+          <tr><td class="slug">/blog/riesgo-laft-en-seguridad-privada/</td><td>Poner la definición de LAFT en el primer párrafo. La gente llega buscando “qué es LAFT” y el artículo no lo responde de entrada</td></tr>
+          <tr><td class="slug">/blog/certificados-digitales-para-las-empresas-de-hoy/</td><td>Ampliar con las variantes de certificado que existen, cuánto duran y cómo se renuevan</td></tr>
+          <tr><td class="slug">/blog/claves-para-blindar-documentos-criticos/</td><td>Reescribir título y poner la respuesta en el primer párrafo. Está en la posición 10, a un puesto de la primera página</td></tr>
+          <tr><td class="slug">/blog/falsificacion-de-productos-y-sus-consecuencias/</td><td>Asignarlo al eje Tarjetas y enlazarlo con el artículo madre de ese eje. Es el artículo con más clics del eje (85) y hoy no está conectado con nada</td></tr>
+          <tr><td class="slug">/blog/tarjetas-comerciales-herramienta-de-marketing/</td><td>Reorientarlo a carnetización empresarial y enlazarlo al artículo madre del eje Tarjetas. Hoy habla de marketing y no de lo que Cadena fabrica</td></tr>
+          <tr><td class="slug">/blog/tarjetas-comerciales-vende-mas/</td><td>Reorientarlo a tarjetas de valor y bonos, y enlazarlo al artículo madre del eje Tarjetas</td></tr>
+          <tr><td class="slug">/blog/asi-son-las-franquicias-digitales/</td><td>Actualizar datos y fecha. Es el segundo artículo con más clics de todo el blog (1.479). No pertenece a ningún eje y no se escribe más sobre el tema: solo se protege</td></tr>
+          <tr><td class="slug">/blog/como-crear-una-marca-personal/</td><td>Reescribir título y descripción. Aparece 9.038 veces con casi ningún clic. Tampoco pertenece a ningún eje</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 6 ELIMINAR Y TÉCNICO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se corrige · 4 de 4</div>
+      <h1 class="title">Lo que se <span class="mark-l">elimina</span> y un arreglo del sitio</h1>
+      <table>
+        <thead><tr><th style="width:46%">Qué</th><th>Qué se hace y por qué</th></tr></thead>
+        <tbody>
+          <tr><td class="slug">/blog/lorem-ipsum/<br>/blog/what-is-lorem-ipsum/</td><td>Eliminar. Son páginas de prueba que quedaron publicadas por error, con texto de relleno</td></tr>
+          <tr><td class="slug">/blog/buenas-practicas-para-implementar-documento-equivalente-electronico/</td><td>Eliminar. Google la revisó y decidió no incluirla en sus resultados; no tiene ninguna aparición</td></tr>
+          <tr><td class="slug">/blog/automatiza-la-recepcion-de-factura-electronica-y-mejora-la-relacion-con-tus-proveedores/</td><td>Eliminar. Cero clics y cero apariciones en 16 meses. Su tema queda cubierto por /blog/automatizar-la-recepcion-de-facturas/</td></tr>
+        </tbody>
+      </table>
+      <p class="body" style="margin-top:1.1em">Un arreglo que hace quien administra el sitio web, no el equipo de contenido:</p>
+      <table>
+        <thead><tr><th style="width:46%">Qué</th><th>Qué se hace y por qué</th></tr></thead>
+        <tbody>
+          <tr><td class="slug">http://www.cadena.com.co/</td><td>El sitio está disponible en dos direcciones: la segura, que empieza en <span class="slug">https://</span>, y una vieja sin seguridad, que empieza en <span class="slug">http://</span>. Google muestra las dos y se reparten el mismo tráfico: la vieja acumuló 19.328 apariciones en tres meses. Hay que configurar el servidor para que toda dirección que empiece en <span class="slug">http://</span> lleve automáticamente a la misma dirección en <span class="slug">https://</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 7 CREAR 1 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se crea · 1 de 3</div>
+      <h1 class="title">Digital Trust y Facturación <span class="mark-l">electrónica</span></h1>
+      <div class="cols2">
+        <div class="lista">
+          <h3>Digital Trust <em>9 artículos</em></h3>
+          <ul>
+            <li class="madre">El ciclo de confianza digital: verificar, certificar, firmar y notificar <span class="tag t-mad">madre</span> se construye sobre /blog/cdn-trust-para-procesos-criticos-empresariales/</li>
+            <li>Ley 2573 de 2026: qué tiene que probar tu empresa sobre cómo verifica identidad</li>
+            <li>Notificación electrónica certificada y la Ley 2213 de 2022</li>
+            <li>Correo electrónico certificado: qué certifica y qué vale como prueba</li>
+            <li>Certificado digital: variantes, vigencia y renovación</li>
+            <li>Firma electrónica, firma certificada y firma digital: cuál usar según el documento</li>
+            <li>Verificación de identidad con biometría y prueba de vida</li>
+            <li>Qué evidencia conservar de una verificación de identidad</li>
+            <li>Certificado digital para factura electrónica</li>
+          </ul>
+        </div>
+        <div class="lista">
+          <h3>Facturación electrónica <em>7 artículos</em></h3>
+          <ul>
+            <li class="madre">Facturación electrónica en Colombia: qué debe emitir, recibir y conservar tu empresa <span class="tag t-mad">madre</span> nuevo</li>
+            <li>Nómina electrónica: obligación, plazos y cómo se transmite</li>
+            <li>Quiénes están obligados a facturar electrónicamente</li>
+            <li>Sanción por no facturar electrónicamente</li>
+            <li>Factura de contingencia: cuándo usarla y qué hacer después</li>
+            <li>Cómo evaluar un proveedor tecnológico autorizado por la DIAN</li>
+            <li>Qué conservar y por cuánto tiempo</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">Los artículos con viñeta verde son el artículo madre del eje. Los demás son satélite y se enlazan al madre.</p>
+    </div>
+  </section>
+
+  <!-- 8 CREAR 2 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se crea · 2 de 3</div>
+      <h1 class="title">Tarjetas y Recepción de <span class="mark-l">facturas</span></h1>
+      <div class="cols2">
+        <div class="lista">
+          <h3>Tarjetas y soportes seguros <em>6 artículos</em></h3>
+          <ul>
+            <li class="madre">Carnetización empresarial: cómo se planea un programa de identificación por sedes <span class="tag t-mad">madre</span> nuevo</li>
+            <li>Carnés en PVC: material, calibre y durabilidad</li>
+            <li>Elementos de seguridad de un carné y cómo se falsifica uno</li>
+            <li>Tarjetas de fidelización: física, digital o las dos</li>
+            <li>Tarjetas con código QR y de barras para control de acceso</li>
+            <li>Tarjeta de valor de marca propia frente al bono de catálogo</li>
+          </ul>
+        </div>
+        <div class="lista">
+          <h3>Recepción de facturas <em>6 artículos</em></h3>
+          <ul>
+            <li>Aceptación tácita y expresa: qué te obliga el silencio</li>
+            <li>Qué es RADIAN y para qué le sirve a tu empresa</li>
+            <li>Factura electrónica como título valor y endoso</li>
+            <li>Acuse de recibo: plazos, formatos y errores frecuentes</li>
+            <li>Documento soporte con no obligados a facturar</li>
+            <li>Rechazo y reclamo de facturas electrónicas</li>
+          </ul>
+          <p class="note">Este eje ya tiene su artículo madre publicado: /blog/recepcion-de-factura-electronica/. Los seis nuevos son satélite y se enlazan a él.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 CREAR 3 -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Qué se crea · 3 de 3</div>
+      <h1 class="title">POS y Verificación en <span class="mark-l">listas</span></h1>
+      <div class="cols2">
+        <div class="lista">
+          <h3>POS y documentos equivalentes <em>5 artículos</em></h3>
+          <ul>
+            <li class="madre">Los 13 documentos equivalentes y quién emite cada uno <span class="tag t-mad">madre</span> se construye sobre /blog/comienza-a-implementar-el-documento-equivalente/</li>
+            <li>Documento equivalente POS y el límite de 5 UVT</li>
+            <li>Cuándo emitir factura electrónica y cuándo tiquete POS</li>
+            <li>Facturación POS de alto volumen y varios puntos de venta</li>
+            <li>Nota de ajuste al documento equivalente</li>
+          </ul>
+        </div>
+        <div class="lista">
+          <h3>Verificación en listas <em>3 artículos</em></h3>
+          <ul>
+            <li class="madre">Verificación de terceros en listas restrictivas: qué listas, con qué periodicidad y qué evidencia queda <span class="tag t-mad">madre</span> nuevo</li>
+            <li>SARLAFT en el sector transporte: obligación, plazos y primer reporte</li>
+            <li>Matriz de riesgo LAFT: cómo elaborarla</li>
+          </ul>
+          <p class="note">Este eje recibe solo tres artículos porque el vocabulario de la circular nueva todavía no lo busca nadie en Google. Cuando aparezca la demanda hay nueve temas más listos.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 AGOSTO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 1</div>
+      <h1 class="title">Agosto <span class="mark-l">2026</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Ley 2573 de 2026: qué tiene que probar tu empresa <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Digital Trust</span> Notificación electrónica certificada y la Ley 2213 de 2022 <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Facturación</span> Nómina electrónica: obligación, plazos y cómo se transmite <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/que-tiene-que-ver-la-factura-electronica-con-la-declaracion-de-renta/</span> <span class="qh">actualizar cifras y enfocarlo en para qué sirve la factura en la declaración</span></li>
+          <li><span class="u">/blog/declaracion-de-renta-con-facturacion-electronica/</span> <span class="qh">actualizar cifras y enfocarlo en cómo declarar usando las facturas; enlazar los dos entre sí</span></li>
+          <li><span class="u">/blog/documento-soporte-para-no-obligados-a-factuar/</span> <span class="qh">reescribir título y descripción; no cambiar la dirección</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Crear las seis categorías del blog y asignarle una a cada artículo que se conserva</li>
+          <li>Pedirle a quien administra el sitio que redirija todas las direcciones http:// a https://</li>
+          <li>Eliminar /blog/lorem-ipsum/ y /blog/what-is-lorem-ipsum/</li>
+        </ul></div>
+      </div>
+      <p class="note">Los dos artículos de renta van primero porque su temporada alta es agosto a octubre. La Ley 2573 va primero porque empieza a regir en noviembre.</p>
+    </div>
+  </section>
+
+  <!-- 11 SEPTIEMBRE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 2</div>
+      <h1 class="title">Septiembre <span class="mark-l">2026</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> El ciclo de confianza digital: verificar, certificar, firmar y notificar <span class="tag t-mad">madre</span> se construye reescribiendo /blog/cdn-trust-para-procesos-criticos-empresariales/</li>
+          <li><span class="tag t-eje">Facturación</span> Quiénes están obligados a facturar electrónicamente <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Carnetización empresarial: cómo se planea un programa por sedes <span class="tag t-mad">madre</span> nuevo</li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/recepcion-de-factura-electronica/</span> <span class="qh">corregir el dato del IVA descontable, que una sentencia de 2025 dejó sin base</span></li>
+          <li><span class="u">/blog/activar-contingencia-en-facturacion-electronica/</span> <span class="qh">reescribir título y descripción</span></li>
+          <li><span class="u">/blog/lo-que-toda-organizacion-debe-sabe-firma-digital/</span> <span class="qh">averiguar primero por qué cayó y después reescribirlo</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Fusionar /blog/recepcion-y-eventos-titulo-valor/ y /blog/guia-para-entender-radian-y-titulo-valor-sin-enredos/ dentro de /blog/factura-electronica-como-titulo-valor-todo-lo-que-debes-saber/ y redirigir los dos</li>
+          <li>Fusionar /blog/factoring-con-factura-electronica/ y /blog/pagar-la-prima-sin-endeudarse-factoring-cadena/ dentro de /blog/que-es-el-factoring-electronico.../ y redirigir los dos</li>
+          <li>Revisar en Search Console que las direcciones nuevas con /blog/ estén recibiendo las apariciones de las antiguas</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 OCTUBRE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 3</div>
+      <h1 class="title">Octubre <span class="mark-l">2026</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Firma electrónica, firma certificada y firma digital: cuál usar <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Digital Trust</span> Certificado digital: variantes, vigencia y renovación <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">POS</span> Los 13 documentos equivalentes y quién emite cada uno <span class="tag t-mad">madre</span> se construye reescribiendo /blog/comienza-a-implementar-el-documento-equivalente/</li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/recepcion-factura-electronica-para-proveedores/</span> <span class="qh">reorientarlo al proveedor que debe emitir, y reescribir título</span></li>
+          <li><span class="u">/blog/programa-de-transparencia-y-etica-empresarial/</span> <span class="qh">actualizar porque el PTEE dejó de existir por separado, y reescribir título</span></li>
+          <li><span class="u">/blog/documento-equivalente-para-servicios-publicos/</span> <span class="qh">ampliar con los requisitos de la Resolución 000165 de 2023</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Fusionar /blog/proteccion-contra-el-fraude-para-empresas/ y /blog/ecosistemas-antifraude/ dentro de /blog/protegeatuempresadelfraude/ y redirigir los dos</li>
+          <li>Fusionar /blog/gestion-documental-en-la-era-de-la-inmediatez/ dentro de /blog/la-gestion-documental-ha-evolucionado/ y redirigirlo</li>
+          <li>Fusionar /blog/1-de-junio-plazo-para-la-factura-electronica-pos/ y /blog/factura-electronica-pos-para-establecimientos/ dentro de /blog/facturacion-electronica-pos/ y redirigir los dos</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 NOVIEMBRE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 4</div>
+      <h1 class="title">Noviembre <span class="mark-l">2026</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Verificación de identidad con biometría y prueba de vida <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Carnés en PVC: material, calibre y durabilidad <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Recepción</span> Aceptación tácita y expresa: qué te obliga el silencio <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/sarlaft-para-el-sector-transporte-2/</span> <span class="qh">actualizar plazos: vencimiento 6 de mayo de 2026, primer reporte 10 de agosto de 2026</span></li>
+          <li><span class="u">/blog/sarlaft-y-ptee-para-el-sector-transporte/</span> <span class="qh">actualizar: la Circular 100-000020 fusionó SAGRILAFT y PTEE en un solo sistema</span></li>
+          <li><span class="u">/blog/actualizaciones-del-ptee-y-sarlaft-segun-la-supertransporte/</span> <span class="qh">actualizar por la misma fusión: ya no son dos sistemas, es uno</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Fusionar /blog/sarlaft-para-el-sector-transporte/ dentro de /blog/sarlaft-para-el-sector-transporte-2/ y redirigirlo. El que se queda es el que termina en “-2”, que tiene 274 clics</li>
+          <li>Fusionar /blog/cambio-de-fechas-en-documento-equivalente/ dentro de /blog/comienza-a-implementar-el-documento-equivalente/ y redirigirlo</li>
+          <li>Redirigir /blog/documento-equivalente-para-servicios-publicos-2/ hacia /blog/documento-equivalente-para-servicios-publicos/. Es una copia exacta</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 DICIEMBRE -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 5</div>
+      <h1 class="title">Diciembre <span class="mark-l">2026</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Facturación</span> Facturación electrónica en Colombia: qué emitir, recibir y conservar <span class="tag t-mad">madre</span> nuevo</li>
+          <li><span class="tag t-eje">Recepción</span> Qué es RADIAN y para qué le sirve a tu empresa <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Tarjetas de fidelización: física, digital o las dos <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/facturacion-electronica-efectividad-y-eficiencia/</span> <span class="qh">actualizar datos y fecha; su contenido es de 2022</span></li>
+          <li><span class="u">/blog/facturacion-electronica-con-nuevos-ajustes-dian/</span> <span class="qh">actualizar: los ajustes que menciona ya fueron reemplazados</span></li>
+          <li><span class="u">/blog/asi-son-las-franquicias-digitales/</span> <span class="qh">actualizar datos; es el segundo artículo con más clics del blog</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Enlazar cada artículo satélite con el artículo madre de su eje</li>
+          <li>Poner en cada artículo madre publicado un bloque visible con los enlaces a sus satélites</li>
+          <li>Revisar que ningún artículo conservado quede sin enlaces que lleguen a él</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 ENERO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 6</div>
+      <h1 class="title">Enero <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Verificación</span> Verificación de terceros en listas restrictivas: qué listas y con qué periodicidad <span class="tag t-mad">madre</span> nuevo</li>
+          <li><span class="tag t-eje">Recepción</span> Factura electrónica como título valor y endoso <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">POS</span> Documento equivalente POS y el límite de 5 UVT <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/certificados-digitales-para-las-empresas-de-hoy/</span> <span class="qh">ampliar con variantes, vigencia y renovación</span></li>
+          <li><span class="u">/blog/claves-para-blindar-documentos-criticos/</span> <span class="qh">reescribir título y poner la respuesta en el primer párrafo</span></li>
+          <li><span class="u">/blog/como-crear-una-marca-personal/</span> <span class="qh">reescribir título y descripción; aparece 9.038 veces con casi ningún clic</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Revisar resultados de los primeros cinco meses: clics, apariciones y posición por eje</li>
+          <li>Fusionar /blog/incentivos-con-proposito-motivacion-y-resulta/ y /blog/motivar-y-reconocer-claves-el-exito-empresarial/ dentro de /blog/programa-de-incentivos-un-aliado-para-aumentar-la-productividad/</li>
+          <li>Decidir qué se hace con los artículos que Google revisó y decidió no incluir en resultados</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 FEBRERO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 7</div>
+      <h1 class="title">Febrero <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Qué evidencia conservar de una verificación de identidad <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Facturación</span> Sanción por no facturar electrónicamente <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Elementos de seguridad de un carné y cómo se falsifica uno <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/superfinanciera-anuncia-cambios-sarlaft/</span> <span class="qh">actualizar: los cambios que anuncia ya fueron reemplazados</span></li>
+          <li><span class="u">/blog/riesgo-laft-en-seguridad-privada/</span> <span class="qh">poner la definición de LAFT en el primer párrafo</span></li>
+          <li><span class="u">/blog/facturacion-electronica-en-el-2025/</span> <span class="qh">quitar “2025” del título y actualizar a la normativa de 2026</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Eliminar /blog/buenas-practicas-para-implementar-documento-equivalente-electronico/ y /blog/automatiza-la-recepcion-de-factura-electronica-y-mejora-la-relacion-con-tus-proveedores/</li>
+          <li>Revisar los artículos madre publicados contra la lista de calidad: respuesta directa al inicio, datos con fuente, fecha visible y enlaces a sus satélites</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 MARZO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 8</div>
+      <h1 class="title">Marzo <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Correo electrónico certificado: qué certifica y qué vale como prueba <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Facturación</span> Factura de contingencia: cuándo usarla y qué hacer después <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Tarjetas con código QR y de barras para control de acceso <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/automatizar-la-recepcion-de-facturas/</span> <span class="qh">actualizar; es el único artículo del blog sobre automatizar cuentas por pagar</span></li>
+          <li><span class="u">/blog/tarjetas-comerciales-herramienta-de-marketing/</span> <span class="qh">reorientar a carnetización y enlazar al artículo madre de Tarjetas</span></li>
+          <li><span class="u">/blog/tarjetas-comerciales-vende-mas/</span> <span class="qh">reorientar a tarjetas de valor y bonos, y enlazar al artículo madre de Tarjetas</span></li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Enlazar entre sí los ejes vecinos: Facturación con POS y con Recepción, Digital Trust con Tarjetas</li>
+          <li>Asignar /blog/falsificacion-de-productos-y-sus-consecuencias/ al eje Tarjetas y enlazarlo a su artículo madre</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 ABRIL -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 9</div>
+      <h1 class="title">Abril <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Digital Trust</span> Certificado digital para factura electrónica <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">POS</span> Cuándo emitir factura electrónica y cuándo tiquete POS <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Recepción</span> Acuse de recibo: plazos, formatos y errores frecuentes <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/trazabilidad-factura-electronica/</span> <span class="qh">actualizar; es el único artículo del blog sobre trazabilidad de facturas</span></li>
+          <li>Los tres artículos con más apariciones y menos clics que queden después de las correcciones del mes 1 al 3</li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Medir en Search Console el CTR de los seis artículos a los que se les cambió el título, y comparar contra el punto de partida de agosto</li>
+          <li>Ajustar los títulos que no hayan mejorado</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 MAYO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 10</div>
+      <h1 class="title">Mayo <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Verificación</span> SARLAFT en el sector transporte: obligación, plazos y primer reporte <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Recepción</span> Documento soporte con no obligados a facturar <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Facturación</span> Cómo evaluar un proveedor tecnológico autorizado por la DIAN <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li><span class="u">/blog/fraude-con-ia-en-empresas/</span> <span class="qh">enlazarlo al artículo madre de Digital Trust y ampliarlo</span></li>
+          <li>Los dos artículos madre con peor rendimiento del semestre</li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Revisión de resultados del primer semestre completo, eje por eje</li>
+          <li>Verificar que la actualización al sistema unificado de SAGRILAFT y PTEE esté completa en los cuatro artículos del eje Verificación: la transición vence el 31 de mayo de 2027</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 JUNIO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 11</div>
+      <h1 class="title">Junio <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Verificación</span> Matriz de riesgo LAFT: cómo elaborarla <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">POS</span> Facturación POS de alto volumen y varios puntos de venta <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Facturación</span> Qué conservar y por cuánto tiempo <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li>Los tres artículos madre con peor rendimiento del año</li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Revisar que las seis categorías del blog estén completas y que no quede ningún artículo sin categoría</li>
+          <li>Revisar que todo artículo tenga al menos un enlace que llegue a él desde otro artículo de su mismo eje</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 JULIO -->
+  <section class="slide">
+    <div class="inner">
+      <div class="kicker">Mes 12</div>
+      <h1 class="title">Julio <span class="mark-l">2027</span></h1>
+      <div class="mesgrid">
+        <div class="bloque crear"><h4>Crear</h4><ul>
+          <li><span class="tag t-eje">Recepción</span> Rechazo y reclamo de facturas electrónicas <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">POS</span> Nota de ajuste al documento equivalente <span class="tag t-sat">satélite</span></li>
+          <li><span class="tag t-eje">Tarjetas</span> Tarjeta de valor de marca propia frente al bono de catálogo <span class="tag t-sat">satélite</span></li>
+        </ul></div>
+        <div class="bloque opt"><h4>Optimizar</h4><ul>
+          <li>Los tres artículos que estén en la posición 11 a 20, es decir a un puesto de entrar a la primera página de Google</li>
+        </ul></div>
+        <div class="bloque"><h4>Ejecutar</h4><ul>
+          <li>Medición del año completo contra el punto de partida de agosto de 2026</li>
+          <li>Definir el plan del siguiente año con los ejes que hayan mostrado retorno</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<button class="nav-btn nav-prev" aria-label="Anterior">&#10094;</button>
+<button class="nav-btn nav-next" aria-label="Siguiente">&#10095;</button>
+<div class="indicator"><span id="cur">1</span> / <span id="tot">21</span></div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0, cur=document.getElementById('cur'), tot=document.getElementById('tot');
+  tot.textContent=slides.length;
+  function show(n){
+    if(n<0)n=0; if(n>slides.length-1)n=slides.length-1;
+    slides.forEach(function(s){s.classList.remove('active');});
+    slides[n].classList.add('active'); i=n; cur.textContent=n+1;
+    window.scrollTo(0,0);
+  }
+  document.querySelector('.nav-prev').addEventListener('click',function(){show(i-1);});
+  document.querySelector('.nav-next').addEventListener('click',function(){show(i+1);});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(i+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){show(i-1);}
+  });
+  show(0);
+})();
+</script>
+</body>
+</html>
