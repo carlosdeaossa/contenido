@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tratamientos Odontológicos Estéticos en Medellín | Unilaser</title>
+<meta name="description" content="Descubre todos nuestros tratamientos odontológicos estéticos: diseño de sonrisa, implantes, rehabilitación oral, blanqueamiento y más. Especialistas en Medellín, Colombia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-page:#FFFFFF;
+    --bg-soft:#F4F4F1;
+    --bg-sage:#EBEFEE;
+    --bg-sage-strong:#DCE4E2;
+    --gold:#84754E;
+    --gold-dark:#6B5D3E;
+    --sage:#829995;
+    --text-dark:#221F1B;
+    --text-body:#4A4A4A;
+    --text-muted:#8A867E;
+    --line:rgba(34,31,27,0.10);
+    --white:#FFFFFF;
+    --font-display:'Nunito Sans', sans-serif;
+    --font-body:'Nunito Sans', sans-serif;
+    --maxw:1240px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg-page);
+    color:var(--text-body);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:inline-block;
+  }
+  h1,h2{font-family:var(--font-display);font-weight:800;color:var(--text-dark);}
+  h3{font-family:var(--font-display);font-weight:700;color:var(--text-dark);}
+  h1{font-size:clamp(2.2rem,4.6vw,3.4rem);line-height:1.14;letter-spacing:-0.01em;}
+  h2{font-size:clamp(1.7rem,3.2vw,2.3rem);line-height:1.2;letter-spacing:-0.01em;}
+  h3{font-size:1.15rem;line-height:1.35;}
+  p{color:var(--text-body);}
+  .section-subtitle{font-size:1.05rem;color:var(--text-body);max-width:600px;margin-top:18px;}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:15px 30px;font-family:var(--font-body);font-weight:600;font-size:14.5px;
+    letter-spacing:.01em;border-radius:2px;border:1px solid transparent;cursor:pointer;
+    transition:all .25s ease;white-space:nowrap;
+  }
+  .btn-primary{background:var(--gold);color:var(--white);}
+  .btn-primary:hover{background:var(--gold-dark);transform:translateY(-1px);}
+  .btn-outline{border-color:rgba(34,31,27,0.28);color:var(--text-dark);background:transparent;}
+  .btn-outline:hover{border-color:var(--text-dark);background:rgba(34,31,27,0.04);}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px;}
+
+  header{
+    position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:var(--maxw);margin:0 auto;}
+  .logo{font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--text-dark);letter-spacing:.01em;}
+  .logo span{color:var(--gold);}
+  .nav-links{display:flex;align-items:center;gap:32px;}
+  .nav-links a{font-size:14px;font-weight:500;color:var(--text-body);transition:color .2s;}
+  .nav-links a:hover{color:var(--text-dark);}
+  .nav-cta{display:none;}
+  @media(min-width:860px){.nav-cta{display:inline-flex;}}
+  @media(max-width:859px){.nav-links{display:none;}}
+
+  section{padding:88px 0;position:relative;}
+  @media(max-width:768px){section{padding:56px 0;}}
+
+  /* ============ HERO ============ */
+  .hero{padding-top:72px;padding-bottom:56px;text-align:center;}
+  .hero .wrap{max-width:720px;}
+  .hero .eyebrow{margin-bottom:18px;}
+
+  /* ============ GRID DE TRATAMIENTOS ============ */
+  .treat-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:28px 24px;
+  }
+  @media(max-width:1080px){.treat-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:540px){.treat-grid{grid-template-columns:1fr;}}
+
+  .treat-card{
+    display:block;position:relative;background:var(--white);
+    border:1px solid var(--line);border-radius:2px;overflow:hidden;
+    transition:box-shadow .3s ease, transform .3s ease;
+  }
+  .treat-card:hover{box-shadow:0 14px 34px rgba(34,31,27,0.10);transform:translateY(-3px);}
+  .treat-media{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--bg-soft);}
+  .treat-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+  .treat-card:hover .treat-media img{transform:scale(1.045);}
+  .treat-badge{
+    position:absolute;top:14px;left:14px;background:var(--gold);color:var(--white);
+    font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 11px;border-radius:2px;z-index:2;
+  }
+  .treat-body{padding:20px 20px 22px;}
+  .treat-body h3{font-size:1.25rem;margin-bottom:8px;}
+  .treat-body p{font-size:13.5px;color:var(--text-body);line-height:1.5;}
+  .treat-hook{
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--line);
+    font-size:13px;font-style:italic;color:var(--gold-dark);line-height:1.5;
+  }
+  .treat-link{
+    display:inline-flex;align-items:center;gap:6px;margin-top:14px;font-size:13px;font-weight:600;
+    color:var(--gold);letter-spacing:.02em;
+  }
+  .treat-link .arrow{transition:transform .25s ease;}
+  .treat-card:hover .treat-link .arrow{transform:translateX(4px);}
+
+  /* ============ DIAGNÓSTICO VIRTUAL ============ */
+  .bg-sage{background:var(--bg-sage);}
+  .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+  @media(max-width:900px){.diag-grid{grid-template-columns:1fr;gap:32px;}}
+  .diag-media{border-radius:2px;overflow:hidden;aspect-ratio:4/3.2;}
+  .diag-media img{width:100%;height:100%;object-fit:cover;}
+
+  /* ============ CÓMO FUNCIONA ============ */
+  .bg-alt{background:var(--bg-soft);}
+  .steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:52px;}
+  @media(max-width:900px){.steps-row{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.steps-row{grid-template-columns:1fr;}}
+  .step{position:relative;padding-top:8px;}
+  .step-num{font-family:var(--font-display);font-weight:800;font-size:2.4rem;color:var(--gold);opacity:.75;line-height:1;}
+  .step h3{margin-top:14px;margin-bottom:8px;font-size:1.15rem;}
+  .step p{font-size:13.5px;}
+
+  /* ============ CTA FINAL ============ */
+  .final-cta{background:var(--bg-sage);}
+  .cta-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:start;}
+  @media(max-width:860px){.cta-grid{grid-template-columns:1fr;gap:40px;}}
+  .contact-box{background:var(--white);border:1px solid var(--line);border-radius:2px;padding:36px;box-shadow:0 4px 24px rgba(34,31,27,0.06);}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+  .field input{
+    width:100%;padding:13px 14px;background:var(--bg-soft);border:1px solid var(--line);
+    color:var(--text-dark);border-radius:2px;font-family:var(--font-body);font-size:14.5px;
+  }
+  .field input:focus{outline:none;border-color:var(--gold);}
+  .contact-box .btn{width:100%;margin-top:6px;}
+  .divider-or{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--text-muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;}
+  .divider-or::before,.divider-or::after{content:'';flex:1;height:1px;background:var(--line);}
+  .direct-links{display:grid;gap:10px;}
+  .direct-link{
+    display:flex;align-items:center;justify-content:space-between;padding:14px 16px;
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:2px;font-size:14px;font-weight:500;color:var(--text-dark);
+    transition:border-color .2s;
+  }
+  .direct-link:hover{border-color:var(--gold);}
+  .related h3.rel-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:18px;font-family:var(--font-body);font-weight:600;}
+  .related-list{display:grid;gap:12px;}
+  .related-item{
+    display:flex;justify-content:space-between;align-items:center;padding:18px 20px;
+    border:1px solid rgba(34,31,27,0.16);border-radius:2px;transition:all .2s;color:var(--text-dark);background:rgba(255,255,255,0.5);
+  }
+  .related-item:hover{border-color:var(--gold);background:var(--white);}
+  .related-item span.arrow{color:var(--gold);}
+
+  footer{border-top:1px solid var(--line);padding:44px 0;background:var(--white);}
+  .footer-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center;}
+  .footer-row p{font-size:13px;color:var(--text-muted);margin:0;}
+  .footer-links{display:flex;gap:22px;flex-wrap:wrap;}
+  .footer-links a{font-size:13px;color:var(--text-body);}
+  .footer-links a:hover{color:var(--text-dark);}
+
+  .wa-float{
+    position:fixed;bottom:22px;right:22px;z-index:200;
+    width:56px;height:56px;border-radius:50%;background:#25D366;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(34,31,27,0.25);
+    transition:transform .2s;
+  }
+  .wa-float:hover{transform:scale(1.06);}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="https://clinicaunilaser.com" class="logo">UNILASER</a>
+    <div class="nav-links">
+      <a href="https://clinicaunilaser.com/nosotros/">Nosotros</a>
+      <a href="#tratamientos">Tratamientos</a>
+      <a href="https://clinicaunilaser.com/diagnostico-virtual/">Diagnóstico virtual</a>
+      <a href="https://clinicaunilaser.com/contacto/">Contacto</a>
+    </div>
+    <a class="btn btn-primary nav-cta" href="https://wa.me/573012792874?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20tratamientos">Agendar valoración</a>
+  </nav>
+</header>
+
+<!-- ========================================================= -->
+<!-- HERO -->
+<!-- ========================================================= -->
+<section class="hero">
+  <div class="wrap reveal">
+    <span class="eyebrow">Nuestros tratamientos</span>
+    <h1>Un tratamiento para la sonrisa que quieres tener</h1>
+    <p class="section-subtitle" style="margin-left:auto;margin-right:auto;">Sin tecnicismos, sin compromiso. Explora cada opción y da el primer paso cuando estés listo.</p>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- GRID DE TRATAMIENTOS -->
+<!-- ========================================================= -->
+<section id="tratamientos" style="padding-top:0;">
+  <div class="wrap">
+    <div class="treat-grid">
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/diseno-de-sonrisa/">
+        <div class="treat-media">
+          <span class="treat-badge">Más solicitado</span>
+          <img src="https://clinicaunilaser.com/wp-content/uploads/DISENO-DE-SONRISA-EN-RESINA-ESTRATIFICADO.webp" alt="Diseño de sonrisa" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Diseño de sonrisa</h3>
+          <p>Carillas en porcelana o resina para una sonrisa que se ve completamente tuya.</p>
+          <p class="treat-hook">Diseñada en digital antes de tocar un solo diente, para que veas el resultado antes de decidir.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/implantes-dentales/">
+        <div class="treat-media">
+          <span class="treat-badge">Más solicitado</span>
+          <img src="https://clinicaunilaser.com/wp-content/uploads/img-slide-implante-dentales-tratamientos-1-700x700-1.webp" alt="Implantes dentales" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Implantes dentales</h3>
+          <p>Reemplaza los dientes que perdiste, con garantía de por vida.</p>
+          <p class="treat-hook">Una raíz artificial que se integra a tu hueso — vuelves a morder, hablar y sonreír sin pensarlo dos veces.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/rehabilitacion-oral-coronas/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/img-slide-rehabilitacion-oral-tratamientos-1-768x784-1.webp" alt="Rehabilitación oral" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Rehabilitación oral</h3>
+          <p>Coronas y prótesis que devuelven función y armonía a tu boca.</p>
+          <p class="treat-hook">Un equipo interdisciplinario diseña tu caso completo, no solo el diente que te preocupa.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/blanqueamiento/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/BLANQUEAMIENTO-DENTAL-1.webp" alt="Blanqueamiento dental" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Blanqueamiento dental</h3>
+          <p>Aclara tu sonrisa varios tonos, en una sola sesión.</p>
+          <p class="treat-hook">El camino más rápido a una sonrisa más luminosa, sin tocar la estructura de tus dientes.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/cierre-de-espacios/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/cierre-de-espacios.webp" alt="Cierre de espacios" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Cierre de espacios</h3>
+          <p>Cierra los espacios entre tus dientes sin ortodoncia larga.</p>
+          <p class="treat-hook">En algunos casos, un solo procedimiento resuelve lo que años de brackets intentarían corregir.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/periodoncia/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/img1-slide-periodoncia-tratamientos-768x776-1.webp" alt="Periodoncia" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Periodoncia</h3>
+          <p>Cuida las encías que sostienen cada uno de tus dientes.</p>
+          <p class="treat-hook">La base invisible de cualquier sonrisa saludable: sin encías sanas, ningún tratamiento estético dura.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/endodoncia/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/img-slide-endodoncia-tratamientos-1-768x511-1.webp" alt="Endodoncia" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Endodoncia</h3>
+          <p>Salva el diente dañado antes de pensar en extraerlo.</p>
+          <p class="treat-hook">Tu propio diente, tratado a tiempo, siempre será mejor que cualquier reemplazo.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+      <a class="treat-card reveal" href="https://clinicaunilaser.com/tratamientos/ortodoncia-invisible/">
+        <div class="treat-media">
+          <img src="https://clinicaunilaser.com/wp-content/uploads/ORTODONCIA-INVISIBLE.webp" alt="Ortodoncia invisible" loading="lazy">
+        </div>
+        <div class="treat-body">
+          <h3>Ortodoncia invisible</h3>
+          <p>Alinea tus dientes con alineadores transparentes, sin brackets.</p>
+          <p class="treat-hook">Corrige tu sonrisa mientras sigues sonriendo en cada foto durante el proceso.</p>
+          <span class="treat-link">Ver tratamiento <span class="arrow">→</span></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- DIAGNÓSTICO VIRTUAL -->
+<!-- ========================================================= -->
+<section class="bg-sage">
+  <div class="wrap diag-grid">
+    <div class="diag-media reveal">
+      <img src="https://clinicaunilaser.com/wp-content/uploads/img-section7.webp" alt="Diagnóstico dental virtual Unilaser" loading="lazy">
+    </div>
+    <div class="reveal">
+      <span class="eyebrow">Diagnóstico dental virtual</span>
+      <h2>Que la distancia no sea un impedimento para transformar tu sonrisa</h2>
+      <p class="section-subtitle">Con el acompañamiento de nuestro equipo de especialistas, analizamos tu caso desde donde estés y te damos un plan de tratamiento personalizado, sin necesidad de viajar todavía.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://wa.me/573012792874?text=Hola%2C%20quiero%20mi%20diagn%C3%B3stico%20dental%20virtual">Hablemos por WhatsApp</a>
+        <a class="btn btn-outline" href="https://clinicaunilaser.com/contacto/">Cuéntanos tu caso</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- CÓMO FUNCIONA -->
+<!-- ========================================================= -->
+<section class="bg-alt">
+  <div class="wrap">
+    <div class="reveal" style="max-width:600px;">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2>Cuatro pasos para transformar tu sonrisa</h2>
+      <p class="section-subtitle">Un proceso simple, sin importar desde qué ciudad o país empieces.</p>
+    </div>
+
+    <div class="steps-row">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Cuéntanos tu caso</h3>
+        <p>Escríbenos por WhatsApp o completa el formulario contándonos qué tratamiento te interesa.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <h3>Diagnóstico virtual</h3>
+        <p>Envíanos fotos y, si las tienes, radiografías. Analizamos tu caso y preparamos opciones.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <h3>Plan y presupuesto</h3>
+        <p>Recibes un plan detallado con las opciones, tiempos estimados y presupuesto transparente.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <h3>Agenda y viaja</h3>
+        <p>Reserva tu cita. Si vienes de otra ciudad o país, te acompañamos con la logística.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- CTA FINAL -->
+<!-- ========================================================= -->
+<section class="final-cta">
+  <div class="wrap cta-grid">
+    <div class="reveal">
+      <span class="eyebrow">Empieza hoy</span>
+      <h2>Tu tratamiento comienza con un mensaje</h2>
+      <p class="section-subtitle">Déjanos tu nombre y WhatsApp, o escríbenos directamente. Te ayudamos a encontrar el tratamiento correcto para tu caso.</p>
+
+      <div class="contact-box" style="margin-top:32px;">
+        <form id="quick-form">
+          <div class="field">
+            <label for="f-name">Nombre completo</label>
+            <input type="text" id="f-name" name="name" required placeholder="Tu nombre">
+          </div>
+          <div class="field">
+            <label for="f-phone">WhatsApp</label>
+            <input type="tel" id="f-phone" name="phone" required placeholder="Ej. 300 123 4567">
+          </div>
+          <button type="submit" class="btn btn-primary">Enviar por WhatsApp</button>
+        </form>
+
+        <div class="divider-or">o contáctanos directo</div>
+
+        <div class="direct-links">
+          <a class="direct-link" href="https://wa.me/573012792874?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20tratamientos">Escribir por WhatsApp →</a>
+          <a class="direct-link" href="tel:+573012792874">Llamar (+57) 301 279 28 74 →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="related reveal">
+      <h3 class="rel-title">¿No sabes cuál elegir?</h3>
+      <div class="related-list">
+        <a class="related-item" href="https://clinicaunilaser.com/diagnostico-virtual/"><span>Haz tu diagnóstico virtual</span><span class="arrow">→</span></a>
+        <a class="related-item" href="https://clinicaunilaser.com/preguntas-frecuentes/"><span>Preguntas frecuentes</span><span class="arrow">→</span></a>
+        <a class="related-item" href="https://clinicaunilaser.com/contacto/"><span>Habla con nuestro equipo</span><span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <p>© 2026 Clínica Unilaser · Edificio Torre Intermédica, consultorio 902, El Poblado, Medellín</p>
+    <div class="footer-links">
+      <a href="https://clinicaunilaser.com/politicas-de-privacidad/">Políticas de privacidad</a>
+      <a href="https://clinicaunilaser.com/terminos-y-condiciones/">Términos y condiciones</a>
+      <a href="https://www.instagram.com/unilaser/">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/573012792874?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20los%20tratamientos" aria-label="Escribir por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.6.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.4.1-.2 0-.4 0-.5-.1-.1-.6-1.5-.8-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.5-.3z"/><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.5.8 3.2 1.3 4.9 1.3 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3C4 15.1 3.5 13.6 3.5 12 3.5 7.3 7.3 3.5 12 3.5S20.5 7.3 20.5 12 16.7 20.3 12 20.3z"/></svg>
+</a>
+
+<script>
+  document.getElementById('quick-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('f-name').value.trim();
+    var phone = document.getElementById('f-phone').value.trim();
+    var msg = 'Hola, soy ' + name + ' (WhatsApp: ' + phone + '). Quiero más información sobre los tratamientos.';
+    window.open('https://wa.me/573012792874?text=' + encodeURIComponent(msg), '_blank');
+  });
+
+  var reveals = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.1});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+</script>
+
+</body>
+</html>
